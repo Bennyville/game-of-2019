@@ -1,11 +1,11 @@
 import "phaser";
-import {MainMenu} from "./scenes/mainMenu";
+import {MainMenuScene} from "./scenes/mainMenuScene";
 
 const config: Phaser.Types.Core.GameConfig = {
     width: 800,
     height: 600,
     parent: "game-wrapper",
-    scene: [MainMenu],
+    scene: [MainMenuScene],
     physics: {
         default: "arcade"
     }

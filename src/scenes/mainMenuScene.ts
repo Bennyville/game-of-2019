@@ -1,4 +1,6 @@
-export class MainMenu extends Phaser.Scene {
+import "phaser"
+
+export class MainMenuScene extends Phaser.Scene {
     private startKey: Phaser.Input.Keyboard.Key;
     private texts: Phaser.GameObjects.Text[] = [];
 
@@ -26,7 +28,7 @@ export class MainMenu extends Phaser.Scene {
 
     update(): void {
         if (this.startKey.isDown) {
-            // this.scene.start("Game");
+            this.scene.start("GameScene");
         }
     }
 }
