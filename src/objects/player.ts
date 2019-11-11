@@ -87,7 +87,7 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.hp -= amount;
 
         if(this.hp <= 0) {
-            this._dead = true;
+            this.dead = true;
         }
     }
 
