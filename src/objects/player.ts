@@ -8,6 +8,7 @@ export class Player extends Phaser.GameObjects.Graphics {
     private hp: number;
     private hpBar: Phaser.GameObjects.Graphics;
     private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    private _dead: boolean;
     private jumping: boolean;
     private _pushing: boolean;
 
@@ -21,6 +22,7 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.hpBar = scene.add.graphics();
         scene.add.existing(this.hpBar);
 
+        this._dead = false;
         this.jumping = false;
         this._pushing = false;
 
@@ -33,6 +35,14 @@ export class Player extends Phaser.GameObjects.Graphics {
         scene.physics.world.enable(this);
         this.body.setSize(20, 20);
         this.body.collideWorldBounds = true;
+    }
+
+    get dead(): boolean {
+        return this._dead;
+    }
+
+    set dead(value: boolean) {
+        this._dead = value;
     }
 
     get pushing(): boolean {
@@ -72,9 +82,13 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.body.setVelocityX(velocityX);
         this._pushing = true;
     }
-    
+
     damage(amount: number) {
         this.hp -= amount;
+
+        if(this.hp <= 0) {
+            this._dead = true;
+        }
     }
 
     updateHpBar() {

@@ -67,6 +67,11 @@ export class GameScene extends Phaser.Scene {
             player.damage(5);
         });
 
+        if(this.player.dead) {
+            this.scene.stop("GameScene");
+            this.scene.start("MainMenuScene");
+        }
+
         this.player.updateHpBar();
     }
 }

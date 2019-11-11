@@ -6,7 +6,7 @@ export class MainMenuScene extends Phaser.Scene {
 
     constructor() {
         super({
-            key: "MainMenu"
+            key: "MainMenuScene"
         });
     }
 
