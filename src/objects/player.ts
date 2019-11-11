@@ -72,6 +72,10 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.body.setVelocityX(velocityX);
         this._pushing = true;
     }
+    
+    damage(amount: number) {
+        this.hp -= amount;
+    }
 
     updateHpBar() {
         this.hpBar.clear();

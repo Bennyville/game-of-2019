@@ -63,6 +63,8 @@ export class GameScene extends Phaser.Scene {
             } else {
                 player.push(1000);
             }
+
+            player.damage(5);
         });
 
         this.player.updateHpBar();
