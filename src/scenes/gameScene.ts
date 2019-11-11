@@ -11,7 +11,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     init(): void {
-        this.player = new Player(this, {x: 50, y: 50});
+        this.player = new Player(this);
     }
 
     create(): void {
