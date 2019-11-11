@@ -28,7 +28,7 @@ export class Player extends Phaser.GameObjects.Graphics {
     }
 
     handleInput() {
-        if(this.body.blocked.down && this.jumping) {
+        if(this.body.blocked.down || this.body.touching.down && this.jumping) {
             this.jumping = false;
         }
 
@@ -45,9 +45,9 @@ export class Player extends Phaser.GameObjects.Graphics {
         }
 
         if(this.cursors.left.isDown) {
-            this.body.setVelocityX(-100);
+            this.body.setVelocityX(-200);
         } else if(this.cursors.right.isDown) {
-            this.body.setVelocityX(100);
+            this.body.setVelocityX(200);
         } else {
             this.body.setVelocityX(0);
         }
