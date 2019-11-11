@@ -2,6 +2,7 @@ import "phaser"
 import {Player} from "../objects/player";
 import {Platform} from "../objects/platform";
 import {Enemy} from "../objects/enemy";
+import {Bullet} from "../objects/bullet";
 
 export class GameScene extends Phaser.Scene {
     private player: Player;
@@ -51,8 +52,25 @@ export class GameScene extends Phaser.Scene {
             this.player.handleInput();
         }
 
+        this.player.shoot();
+
+        this.physics.add.collider(this.enemies, this.player.bullets);
+
+        this.physics.world.on('worldbounds', (bullet) => {
+            bullet.gameObject.destroy();
+        });
+
+        Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
+            bullet.move();
+        }, null);
+
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.move();
+            enemy.updateHpBar();
+
+            if(enemy.dead) {
+                enemy.destroy();
+            }
         }, null);
 
         this.player.pushing = false;
@@ -65,6 +83,11 @@ export class GameScene extends Phaser.Scene {
             }
 
             player.damage(5);
+        });
+
+        this.physics.collide(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
+            bullet.destroy();
+            enemy.damage(10);
         });
 
         if(this.player.dead) {
