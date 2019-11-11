@@ -8,7 +8,12 @@ const config: Phaser.Types.Core.GameConfig = {
     parent: "game-wrapper",
     scene: [MainMenuScene, GameScene],
     physics: {
-        default: "arcade"
+        default: "arcade",
+        arcade: {
+            gravity: {
+                y: 100
+            }
+        }
     }
 };
 
