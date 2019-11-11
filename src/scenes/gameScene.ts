@@ -19,6 +19,6 @@ export class GameScene extends Phaser.Scene {
     }
 
     update(): void {
-
+        this.player.handleInput();
     }
 }
