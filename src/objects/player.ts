@@ -5,6 +5,8 @@ export class Player extends Phaser.GameObjects.Graphics {
 
     private position: Phaser.Math.Vector2;
     private velocity: Phaser.Math.Vector2;
+    private hp: number;
+    private hpBar: Phaser.GameObjects.Graphics;
     private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private jumping: boolean;
     private _pushing: boolean;
@@ -14,6 +16,10 @@ export class Player extends Phaser.GameObjects.Graphics {
 
         this.position = new Phaser.Math.Vector2({x: 0, y: 0});
         this.velocity = new Phaser.Math.Vector2({x: 0, y: 0});
+
+        this.hp = 100;
+        this.hpBar = scene.add.graphics();
+        scene.add.existing(this.hpBar);
 
         this.jumping = false;
         this._pushing = false;
@@ -65,6 +71,14 @@ export class Player extends Phaser.GameObjects.Graphics {
     push(velocityX: number) {
         this.body.setVelocityX(velocityX);
         this._pushing = true;
+    }
+
+    updateHpBar() {
+        this.hpBar.clear();
+        this.hpBar.x = this.body.x;
+        this.hpBar.y = this.body.y;
+        this.hpBar.fillStyle(0x00ff00, 1);
+        this.hpBar.fillRect((20 * 1.5 - 20) / -2, -4, 20*1.5 / (100 / this.hp), 3);
     }
 }
 

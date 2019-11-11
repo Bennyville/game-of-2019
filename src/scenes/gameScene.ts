@@ -64,5 +64,7 @@ export class GameScene extends Phaser.Scene {
                 player.push(1000);
             }
         });
+
+        this.player.updateHpBar();
     }
 }
