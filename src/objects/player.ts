@@ -7,6 +7,7 @@ export class Player extends Phaser.GameObjects.Graphics {
     private velocity: Phaser.Math.Vector2;
     private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private jumping: boolean;
+    private _pushing: boolean;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -15,6 +16,7 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.velocity = new Phaser.Math.Vector2({x: 0, y: 0});
 
         this.jumping = false;
+        this._pushing = false;
 
         this.cursors = scene.input.keyboard.createCursorKeys();
 
@@ -27,11 +29,18 @@ export class Player extends Phaser.GameObjects.Graphics {
         this.body.collideWorldBounds = true;
     }
 
+    get pushing(): boolean {
+        return this._pushing;
+    }
+
+    set pushing(value: boolean) {
+        this._pushing = value;
+    }
+
     handleInput() {
         if(this.body.blocked.down || this.body.touching.down && this.jumping) {
             this.jumping = false;
         }
-
 
         if(this.cursors.down.isDown) {
             // this.dodge();
@@ -51,6 +60,11 @@ export class Player extends Phaser.GameObjects.Graphics {
         } else {
             this.body.setVelocityX(0);
         }
+    }
+
+    push(velocityX: number) {
+        this.body.setVelocityX(velocityX);
+        this._pushing = true;
     }
 }
 

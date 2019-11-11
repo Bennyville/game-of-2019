@@ -43,13 +43,26 @@ export class GameScene extends Phaser.Scene {
         this.enemies.add(new Enemy(this));
 
         this.physics.add.collider(this.player, this.platforms);
+        this.physics.add.overlap(this.player, this.enemies);
     }
 
     update(): void {
-        this.player.handleInput();
+        if(!this.player.pushing) {
+            this.player.handleInput();
+        }
 
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.move();
         }, null);
+
+        this.player.pushing = false;
+
+        this.physics.overlap(this.player, this.enemies, (player: Player, enemy: Enemy) => {
+            if(player.x < enemy.x) {
+                player.push(-1000);
+            } else {
+                player.push(1000);
+            }
+        });
     }
 }
