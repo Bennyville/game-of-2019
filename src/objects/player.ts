@@ -18,6 +18,9 @@ export class Player extends Character {
     constructor(scene: Phaser.Scene) {
         super(scene);
 
+        this.x = 400;
+        this.y = 575;
+
         this.fireRate = 5;
 
         this.jumping = false;
