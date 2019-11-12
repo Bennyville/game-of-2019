@@ -26,10 +26,10 @@ export class Enemy extends Character {
         if (this.xStep < this.xSteps) {
             switch (this.xV) {
                 case 0:
-                    this.x += 2;
+                    this.x += 1.5;
                     break;
                 case 1:
-                    this.x -= 2;
+                    this.x -= 1.5;
                     break;
                 case 2:
                     break;
