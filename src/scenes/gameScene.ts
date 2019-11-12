@@ -54,7 +54,7 @@ export class GameScene extends Phaser.Scene {
 
         this.player.shoot();
 
-        this.physics.add.collider(this.enemies, this.player.bullets);
+        this.physics.add.overlap(this.enemies, this.player.bullets);
 
         this.physics.world.on('worldbounds', (bullet) => {
             bullet.gameObject.destroy();
@@ -85,7 +85,7 @@ export class GameScene extends Phaser.Scene {
             player.damage(5);
         });
 
-        this.physics.collide(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
+        this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
             bullet.destroy();
             enemy.damage(10);
         });
