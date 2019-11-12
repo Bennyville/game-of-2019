@@ -20,20 +20,23 @@ export class Enemy extends Character {
         if (this.xSteps === 0) {
             this.xV = Phaser.Math.Between(0, 2);
 
+            switch (this.xV) {
+                case 0:
+                    this.body.setVelocityX(1.5);
+                    break;
+                case 1:
+                    this.body.setVelocityX(-1.5);
+                    break;
+                case 2:
+                    this.body.setVelocityX(0);
+                    break;
+            }
+
             this.xSteps = Phaser.Math.Between(0, 100);
         }
 
         if (this.xStep < this.xSteps) {
-            switch (this.xV) {
-                case 0:
-                    this.x += 1.5;
-                    break;
-                case 1:
-                    this.x -= 1.5;
-                    break;
-                case 2:
-                    break;
-            }
+            this.x += this.body.velocity.x;
 
             this.xStep++;
         } else {

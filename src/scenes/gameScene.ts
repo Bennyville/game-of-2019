@@ -44,7 +44,7 @@ export class GameScene extends Phaser.Scene {
         this.enemies.add(new Enemy(this));
 
         this.physics.add.collider(this.player, this.platforms);
-        this.physics.add.collider(this.enemies, this.platforms);
+        this.physics.add.overlap(this.enemies, this.platforms);
         this.physics.add.overlap(this.player, this.enemies);
     }
 
@@ -91,6 +91,14 @@ export class GameScene extends Phaser.Scene {
         this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
             bullet.destroy();
             enemy.damage(10);
+        });
+
+        this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
+            console.log(enemy.body.velocity.x);
+            if((enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
+                console.log('jup');
+                enemy.body.velocity.x *= -1;
+            }
         });
 
         if(this.player.dead) {
