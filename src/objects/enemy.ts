@@ -5,15 +5,26 @@ export class Enemy extends Character {
     private xSteps: number;
     private xStep: number;
     private xV: integer;
+    private _patrolling: boolean;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
 
         this.x = Phaser.Math.Between(0, 800);
 
+        this.patrolling = Phaser.Math.RND.pick([true, false]);
+
         this.fillStyle(0xff0000, 1);
         this.fillRect(0, 0, 20, 20);
         scene.add.existing(this);
+    }
+    
+    get patrolling(): boolean {
+        return this._patrolling;
+    }
+
+    set patrolling(value: boolean) {
+        this._patrolling = value;
     }
 
     move() {

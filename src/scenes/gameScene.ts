@@ -95,9 +95,7 @@ export class GameScene extends Phaser.Scene {
         });
 
         this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
-            console.log(enemy.body.velocity.x);
-            if((enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
-                console.log('jup');
+            if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
                 enemy.body.velocity.x *= -1;
             }
         });
