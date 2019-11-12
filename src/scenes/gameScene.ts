@@ -39,9 +39,10 @@ export class GameScene extends Phaser.Scene {
         this.platforms.add(new Platform(this, 587.5, 375, 112.5, 20));
 
         this.enemies = this.add.group();
-        this.enemies.add(new Enemy(this));
-        this.enemies.add(new Enemy(this));
-        this.enemies.add(new Enemy(this));
+
+        for(let i = 0; i < 10; i++) {
+            this.enemies.add(new Enemy(this));
+        }
 
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.overlap(this.enemies, this.platforms);
