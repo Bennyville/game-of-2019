@@ -9,6 +9,8 @@ export class Enemy extends Character {
     constructor(scene: Phaser.Scene) {
         super(scene);
 
+        this.x = Phaser.Math.Between(0, 800);
+
         this.fillStyle(0xff0000, 1);
         this.fillRect(0, 0, 20, 20);
         scene.add.existing(this);
