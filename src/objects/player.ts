@@ -1,6 +1,7 @@
 import "phaser"
 import {Bullet} from "./bullet";
 import {Character} from "./character";
+import {Enemy} from "./enemy";
 
 export class Player extends Character {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
@@ -12,6 +13,7 @@ export class Player extends Character {
     private bulletSpeed: number;
     private fireRate: number;
     private nextShot: number;
+    private target: Enemy;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -77,13 +79,36 @@ export class Player extends Character {
     }
 
     shoot() {
-        if(this.nextShot < this.scene.time.now || !this.nextShot) {
-            let bullet = new Bullet(this.scene, this.x, this.y + (20/2));
+        if (this.target) {
+            let angle = Phaser.Math.Angle.Between(this.x, this.y + (20 / 2), this.target.x, this.target.y + (20 / 2));
+            let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
-            this.bullets.add(bullet);
+            if (this.nextShot < this.scene.time.now || !this.nextShot) {
+                let bullet = new Bullet(this.scene, this.x, this.y + (20 / 2), velocity.x, velocity.y);
 
-            this.nextShot = this.scene.time.now + (1000 / this.fireRate);
+                this.bullets.add(bullet);
+
+                this.nextShot = this.scene.time.now + (1000 / this.fireRate);
+            }
         }
+    }
+
+    findTarget(enemies) {
+        let closestDistance = -1;
+        let closestEnemy;
+
+        Phaser.Actions.Call(enemies.getChildren(), (enemy: Enemy) => {
+            if(enemy.y < this.y + 5 && enemy.y > this.y - 5) {
+                let distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+
+                if (closestDistance === -1 || closestDistance > distance) {
+                    closestDistance = distance;
+                    closestEnemy = enemy;
+                }
+            }
+        }, null);
+
+        this.target = closestEnemy;
     }
 }
 

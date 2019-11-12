@@ -8,11 +8,13 @@ export class Bullet extends Phaser.GameObjects.Graphics {
     private vx: number;
     private vy: number;
 
-    constructor(scene: Phaser.Scene, x: number, y: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, vx: number, vy: number) {
         super(scene);
 
         this.x = x;
         this.y = y;
+        this.vx = vx;
+        this.vy = vy;
         this.radius = 2;
         this.color = 0xffffff;
         this.scene.add.existing(this);
@@ -28,8 +30,8 @@ export class Bullet extends Phaser.GameObjects.Graphics {
 
     move(): void {
         // this.clear();
-        this.x += 5;
-        // this.y += 0;
+        this.x += this.vx;
+        this.y += this.vy;
         // this.fillStyle(this.color, 1);
         // this.fillCircle(this.radius, this.radius, this.radius);
     }

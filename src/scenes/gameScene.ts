@@ -52,6 +52,8 @@ export class GameScene extends Phaser.Scene {
             this.player.handleInput();
         }
 
+        this.player.findTarget(this.enemies);
+
         this.player.shoot();
 
         this.physics.add.overlap(this.enemies, this.player.bullets);
