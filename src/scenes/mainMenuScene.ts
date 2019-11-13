@@ -1,7 +1,7 @@
 import "phaser"
 
 export class MainMenuScene extends Phaser.Scene {
-    private startKey: Phaser.Input.Keyboard.Key;
+    private startKey!: Phaser.Input.Keyboard.Key;
     private texts: Phaser.GameObjects.Text[] = [];
 
     constructor() {

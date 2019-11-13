@@ -11,7 +11,7 @@ export class Platform extends Phaser.GameObjects.Graphics {
 
         this.x = x;
         this.y = y;
-        this.width = w;
+        this._width = w;
         this.height = h;
 
         this.fillStyle(0xffffff, 1);

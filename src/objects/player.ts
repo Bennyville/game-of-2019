@@ -10,10 +10,9 @@ export class Player extends Character {
     private jumping: boolean;
     private _pushing: boolean;
     private _bullets: Phaser.GameObjects.Group;
-    private bulletSpeed: number;
     private fireRate: number;
     private nextShot: number;
-    private target: Enemy;
+    private target?: Enemy;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -23,10 +22,12 @@ export class Player extends Character {
 
         this.fireRate = 5;
 
+        this.nextShot = 0;
+
         this.jumping = false;
         this._pushing = false;
 
-        this.bullets = this.scene.add.group();
+        this._bullets = this.scene.add.group();
 
         this.cursors = scene.input.keyboard.createCursorKeys();
 
@@ -56,20 +57,20 @@ export class Player extends Character {
             this.jumping = false;
         }
 
-        if(this.cursors.down.isDown) {
+        if(this.cursors.down!.isDown) {
             // this.dodge();
         }
 
-        if(this.cursors.up.isDown) {
+        if(this.cursors.up!.isDown) {
             if(!this.jumping) {
                 this.body.setVelocityY(-500);
                 this.jumping = true;
             }
         }
 
-        if(this.cursors.left.isDown) {
+        if(this.cursors.left!.isDown) {
             this.body.setVelocityX(-200);
-        } else if(this.cursors.right.isDown) {
+        } else if(this.cursors.right!.isDown) {
             this.body.setVelocityX(200);
         } else {
             this.body.setVelocityX(0);
@@ -100,6 +101,7 @@ export class Player extends Character {
         let closestDistance = -1;
         let closestEnemy;
 
+        // @ts-ignore
         Phaser.Actions.Call(enemies.getChildren(), (enemy: Enemy) => {
             if(enemy.y < this.y + 5 && enemy.y > this.y - 5) {
                 let distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);

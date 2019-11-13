@@ -5,9 +5,9 @@ import {Enemy} from "../objects/enemy";
 import {Bullet} from "../objects/bullet";
 
 export class GameScene extends Phaser.Scene {
-    private player: Player;
-    private platforms: Phaser.GameObjects.Group;
-    private enemies: Phaser.GameObjects.Group;
+    private player!: Player;
+    private platforms!: Phaser.GameObjects.Group;
+    private enemies!: Phaser.GameObjects.Group;
 
     constructor() {
         super({
@@ -64,10 +64,12 @@ export class GameScene extends Phaser.Scene {
             bullet.gameObject.destroy();
         });
 
+        // @ts-ignore
         Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
             bullet.move();
         }, null);
 
+        // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.move();
             enemy.updateHpBar();
@@ -79,6 +81,7 @@ export class GameScene extends Phaser.Scene {
 
         this.player.pushing = false;
 
+        // @ts-ignore
         this.physics.overlap(this.player, this.enemies, (player: Player, enemy: Enemy) => {
             if(player.x < enemy.x) {
                 player.push(-1000);
@@ -89,11 +92,13 @@ export class GameScene extends Phaser.Scene {
             player.damage(5);
         });
 
+        // @ts-ignore
         this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
             bullet.destroy();
             enemy.damage(10);
         });
 
+        // @ts-ignore
         this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
             if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
                 enemy.body.velocity.x *= -1;

@@ -4,7 +4,7 @@ import {Character} from "./character";
 export class Enemy extends Character {
     private xSteps: number;
     private xStep: number;
-    private xV: integer;
+    private xDirection: integer;
     private _patrolling: boolean;
 
     constructor(scene: Phaser.Scene) {
@@ -12,13 +12,17 @@ export class Enemy extends Character {
 
         this.x = Phaser.Math.Between(0, 800);
 
-        this.patrolling = Phaser.Math.RND.pick([true, false]);
+        this._patrolling = Phaser.Math.RND.pick([true, false]);
+
+        this.xSteps = 0;
+        this.xStep = 0;
+        this.xDirection = 0;
 
         this.fillStyle(0xff0000, 1);
         this.fillRect(0, 0, 20, 20);
         scene.add.existing(this);
     }
-    
+
     get patrolling(): boolean {
         return this._patrolling;
     }
@@ -29,9 +33,9 @@ export class Enemy extends Character {
 
     move() {
         if (this.xSteps === 0) {
-            this.xV = Phaser.Math.Between(0, 2);
+            this.xDirection = Phaser.Math.Between(0, 2);
 
-            switch (this.xV) {
+            switch (this.xDirection) {
                 case 0:
                     this.body.setVelocityX(1.5);
                     break;
