@@ -48,6 +48,8 @@ export class Enemy extends Character {
             }
 
             this.xSteps = Phaser.Math.Between(0, 100);
+
+            this.patrolling = Phaser.Math.RND.pick([true, false]);
         }
 
         if (this.xStep < this.xSteps) {
