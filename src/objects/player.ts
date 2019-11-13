@@ -24,6 +24,9 @@ export class Player extends Character {
 
         this.nextShot = 0;
 
+        this.bulletDamage = 20;
+        this.weaponCount = 1;
+
         this.jumping = false;
         this._pushing = false;
 
@@ -83,7 +86,7 @@ export class Player extends Character {
     }
 
     shoot() {
-        if (this.target) {
+        if (this.target && this.weaponCount > 0) {
             let angle = Phaser.Math.Angle.Between(this.x, this.y + (20 / 2), this.target.x, this.target.y + (20 / 2));
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 

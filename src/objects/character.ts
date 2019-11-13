@@ -3,9 +3,12 @@ import "phaser";
 export class Character extends Phaser.GameObjects.Graphics {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
 
-    private hp: number;
-    private _dead: boolean;
-    private hpBar: Phaser.GameObjects.Graphics;
+    protected hp: number;
+    protected _dead: boolean;
+    protected hpBar: Phaser.GameObjects.Graphics;
+    protected _bulletDamage: number;
+    protected _touchDamage: number;
+    protected _weaponCount: number;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -19,6 +22,10 @@ export class Character extends Phaser.GameObjects.Graphics {
 
         this._dead = false;
 
+        this._bulletDamage = 0;
+        this._touchDamage = 0;
+        this._weaponCount = 0;
+
         this.fillStyle(0xffffff, 1);
         this.fillRect(0, 0, 20, 20);
         scene.add.existing(this);
@@ -26,6 +33,30 @@ export class Character extends Phaser.GameObjects.Graphics {
         scene.physics.world.enable(this);
         this.body.setSize(20, 20);
         this.body.collideWorldBounds = true;
+    }
+
+    get bulletDamage(): number {
+        return this._bulletDamage;
+    }
+
+    set bulletDamage(value: number) {
+        this._bulletDamage = value;
+    }
+
+    get touchDamage(): number {
+        return this._touchDamage;
+    }
+
+    set touchDamage(value: number) {
+        this._touchDamage = value;
+    }
+
+    get weaponCount(): number {
+        return this._weaponCount;
+    }
+
+    set weaponCount(value: number) {
+        this._weaponCount = value;
     }
 
     get dead(): boolean {
