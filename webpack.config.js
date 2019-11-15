@@ -9,7 +9,8 @@ module.exports = {
     module: {
         rules: [
             {test: /\.ts$/, loader: 'ts-loader', exclude: '/node_modules/'},
-            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'}
+            {test: /phaser\.js$/, loader: 'expose-loader?Phaser'},
+            {test: /\.(gif|png|jpe?g|svg|xml)$/i, loader: "file-loader"}
         ]
     },
     devServer: {
