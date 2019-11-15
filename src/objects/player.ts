@@ -13,6 +13,7 @@ export class Player extends Character {
     private fireRate: number;
     private nextShot: number;
     private target?: Enemy;
+    private weapon: Phaser.GameObjects.Sprite;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
         super(scene, x, y, texture);
@@ -35,6 +36,10 @@ export class Player extends Character {
         this.cursors = scene.input.keyboard.createCursorKeys();
 
         this.setScale(2, 2);
+
+        this.weapon = scene.add.sprite(this.x, this.y, "weapons");
+        this.weapon.setFrame(7);
+        this.weapon.setScale(2);
 
         scene.add.existing(this);
     }
@@ -75,14 +80,20 @@ export class Player extends Character {
             this.body.setVelocityX(-200);
             this.anims.play('playerWalking', true);
             this.setFlipX(true);
+            this.weapon.setFlipX(true);
+            this.weapon.setX(this.x-20);
         } else if(this.cursors.right!.isDown) {
             this.body.setVelocityX(200);
             this.anims.play('playerWalking', true);
             this.setFlipX(false);
+            this.weapon.setFlipX(false);
+            this.weapon.setX(this.x+15);
         } else {
             this.body.setVelocityX(0);
             this.anims.stop();
         }
+
+        this.weapon.y = this.y+5;
     }
 
     push(velocityX: number) {
@@ -92,11 +103,11 @@ export class Player extends Character {
 
     shoot() {
         if (this.target && this.weaponCount > 0) {
-            let angle = Phaser.Math.Angle.Between(this.x, this.y + (17 / 2), this.target.x, this.target.y + (17 / 2));
+            let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, this.target.y + 2);
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
             if (this.nextShot < this.scene.time.now || !this.nextShot) {
-                let bullet = new Bullet(this.scene, this.x, this.y - (17 / 2), velocity.x, velocity.y);
+                let bullet = new Bullet(this.scene, this.x, this.y - 2, velocity.x, velocity.y);
 
                 this.bullets.add(bullet);
 
