@@ -14,8 +14,8 @@ export class Player extends Character {
     private nextShot: number;
     private target?: Enemy;
 
-    constructor(scene: Phaser.Scene) {
-        super(scene);
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
+        super(scene, x, y, texture);
 
         this.x = 400;
         this.y = 575;
@@ -34,8 +34,8 @@ export class Player extends Character {
 
         this.cursors = scene.input.keyboard.createCursorKeys();
 
-        this.fillStyle(0xffffff, 1);
-        this.fillRect(0, 0, 20, 20);
+        this.setScale(2, 2);
+
         scene.add.existing(this);
     }
 
@@ -73,10 +73,15 @@ export class Player extends Character {
 
         if(this.cursors.left!.isDown) {
             this.body.setVelocityX(-200);
+            this.anims.play('playerWalking', true);
+            this.setFlipX(true);
         } else if(this.cursors.right!.isDown) {
             this.body.setVelocityX(200);
+            this.anims.play('playerWalking', true);
+            this.setFlipX(false);
         } else {
             this.body.setVelocityX(0);
+            this.anims.stop();
         }
     }
 
@@ -87,11 +92,11 @@ export class Player extends Character {
 
     shoot() {
         if (this.target && this.weaponCount > 0) {
-            let angle = Phaser.Math.Angle.Between(this.x, this.y + (20 / 2), this.target.x, this.target.y + (20 / 2));
+            let angle = Phaser.Math.Angle.Between(this.x, this.y + (17 / 2), this.target.x, this.target.y + (17 / 2));
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
             if (this.nextShot < this.scene.time.now || !this.nextShot) {
-                let bullet = new Bullet(this.scene, this.x, this.y + (20 / 2), velocity.x, velocity.y);
+                let bullet = new Bullet(this.scene, this.x, this.y - (17 / 2), velocity.x, velocity.y);
 
                 this.bullets.add(bullet);
 
@@ -106,7 +111,7 @@ export class Player extends Character {
 
         // @ts-ignore
         Phaser.Actions.Call(enemies.getChildren(), (enemy: Enemy) => {
-            if(enemy.y < this.y + 5 && enemy.y > this.y - 5) {
+            if(enemy.y < this.y + 15 && enemy.y > this.y - 15) {
                 let distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
 
                 if (closestDistance === -1 || closestDistance > distance) {

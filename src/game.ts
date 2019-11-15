@@ -3,6 +3,7 @@ import {MainMenuScene} from "./scenes/mainMenuScene";
 import {GameScene} from "./scenes/gameScene";
 
 const config: Phaser.Types.Core.GameConfig = {
+    backgroundColor: 0xCCCCCC,
     width: 800,
     height: 600,
     parent: "game-wrapper",
@@ -12,7 +13,8 @@ const config: Phaser.Types.Core.GameConfig = {
         arcade: {
             gravity: {
                 y: 1250
-            }
+            },
+            debug: true
         }
     },
     scale: {

@@ -16,10 +16,23 @@ export class GameScene extends Phaser.Scene {
     }
 
     init(): void {
+        this.anims.create({
+            key: 'playerWalking',
+            frames: this.anims.generateFrameNumbers('player', { start: 6, end: 9 }),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'enemyWalking',
+            frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
     }
 
     create(): void {
-        this.player = new Player(this);
+        this.player = new Player(this, 0, 0, 'player');
 
         this.platforms = this.add.group();
 
@@ -41,7 +54,7 @@ export class GameScene extends Phaser.Scene {
         this.enemies = this.add.group();
 
         for(let i = 0; i < 10; i++) {
-            this.enemies.add(new Enemy(this));
+            this.enemies.add(new Enemy(this, 0, 0, 'enemy'));
         }
 
         this.physics.add.collider(this.player, this.platforms);

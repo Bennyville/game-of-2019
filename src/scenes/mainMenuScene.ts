@@ -16,6 +16,12 @@ export class MainMenuScene extends Phaser.Scene {
         );
     }
 
+    preload(): void {
+        this.load.spritesheet("player", "../src/assets/player-walking.png", {frameHeight: 17, frameWidth: 16});
+        this.load.spritesheet("enemy", "../src/assets/enemy_set.png", {frameHeight: 17, frameWidth: 16});
+        this.load.image("background", "../src/assets/background.png");
+    }
+
     create(): void {
         this.texts.push(
             this.add.text(

@@ -1,6 +1,6 @@
 import "phaser";
 
-export class Character extends Phaser.GameObjects.Graphics {
+export class Character extends Phaser.GameObjects.Sprite {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
 
     protected hp: number;
@@ -10,11 +10,8 @@ export class Character extends Phaser.GameObjects.Graphics {
     protected _touchDamage: number;
     protected _weaponCount: number;
 
-    constructor(scene: Phaser.Scene) {
-        super(scene);
-
-        this.x = 0;
-        this.y = 0;
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
+        super(scene, x, y, texture, frame);
 
         this.hp = 100;
         this.hpBar = scene.add.graphics();
@@ -26,12 +23,10 @@ export class Character extends Phaser.GameObjects.Graphics {
         this._touchDamage = 0;
         this._weaponCount = 0;
 
-        this.fillStyle(0xffffff, 1);
-        this.fillRect(0, 0, 20, 20);
         scene.add.existing(this);
 
         scene.physics.world.enable(this);
-        this.body.setSize(20, 20);
+        this.body.setSize(10, 16);
         this.body.collideWorldBounds = true;
     }
 
@@ -80,6 +75,6 @@ export class Character extends Phaser.GameObjects.Graphics {
         this.hpBar.x = this.body.x;
         this.hpBar.y = this.body.y;
         this.hpBar.fillStyle(0x00ff00, 1);
-        this.hpBar.fillRect((20 * 1.5 - 20) / -2, -4, 20*1.5 / (100 / this.hp), 3);
+        this.hpBar.fillRect((32 - 32) / -2, -4, 32 / (100 / this.hp), 3);
     }
 }

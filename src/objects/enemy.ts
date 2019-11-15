@@ -7,8 +7,8 @@ export class Enemy extends Character {
     private xDirection: integer;
     private _patrolling: boolean;
 
-    constructor(scene: Phaser.Scene) {
-        super(scene);
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
+        super(scene, x, y, texture);
 
         this.x = Phaser.Math.Between(0, 800);
 
@@ -18,8 +18,8 @@ export class Enemy extends Character {
         this.xStep = 0;
         this.xDirection = 0;
 
-        this.fillStyle(0xff0000, 1);
-        this.fillRect(0, 0, 20, 20);
+        this.setScale(2);
+
         scene.add.existing(this);
     }
 
@@ -38,12 +38,17 @@ export class Enemy extends Character {
             switch (this.xDirection) {
                 case 0:
                     this.body.setVelocityX(1.5);
+                    this.anims.play('enemyWalking');
+                    this.setFlipX(false);
                     break;
                 case 1:
                     this.body.setVelocityX(-1.5);
+                    this.anims.play('enemyWalking');
+                    this.setFlipX(true);
                     break;
                 case 2:
                     this.body.setVelocityX(0);
+                    this.anims.stop();
                     break;
             }
 
