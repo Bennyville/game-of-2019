@@ -3,6 +3,7 @@ import {Character} from "./character";
 
 export class Enemy extends Character {
     private _patrolling: boolean;
+    private _chase: boolean;
     private _xSteps: number;
     private _xStep: number;
     private _xDirection: integer;
@@ -15,6 +16,7 @@ export class Enemy extends Character {
 
         // states
         this._patrolling = Phaser.Math.RND.pick([true, false]);
+        this._chase = Phaser.Math.RND.pick([true, false]);
 
         // movement
         this._xSteps = 0;
@@ -22,9 +24,20 @@ export class Enemy extends Character {
         this._xDirection = 0;
     }
 
-    public move(): void {
+    public move(playerX: number): void {
         if (this.xSteps === 0) {
-            this.xDirection = Phaser.Math.Between(0, 2);
+            this.patrolling = Phaser.Math.RND.pick([true, false]);
+            this.chase = Phaser.Math.RND.pick([true, false]);
+
+            if(this.chase) {
+                if(playerX > this.x) {
+                    this.xDirection = 0;
+                } else {
+                    this.xDirection = 1;
+                }
+            } else {
+                this.xDirection = Phaser.Math.Between(0, 2);
+            }
 
             switch (this.xDirection) {
                 case 0:
@@ -44,8 +57,6 @@ export class Enemy extends Character {
             }
 
             this.xSteps = Phaser.Math.Between(0, 100);
-
-            this.patrolling = Phaser.Math.RND.pick([true, false]);
         }
 
         if (this.xStep < this.xSteps) {
@@ -88,6 +99,14 @@ export class Enemy extends Character {
 
     set patrolling(value: boolean) {
         this._patrolling = value;
+    }
+
+    get chase(): boolean {
+        return this._chase;
+    }
+
+    set chase(value: boolean) {
+        this._chase = value;
     }
 }
 

@@ -84,7 +84,7 @@ export class GameScene extends Phaser.Scene {
 
         // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
-            enemy.move();
+            enemy.move(this.player.x);
             enemy.updateHpBar();
 
             if(enemy.dead) {
