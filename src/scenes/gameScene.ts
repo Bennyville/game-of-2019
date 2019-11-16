@@ -105,6 +105,8 @@ export class GameScene extends Phaser.Scene {
             player.damage(5);
         });
 
+        this.player.updateWeapon();
+
         // @ts-ignore
         this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
             bullet.destroy();

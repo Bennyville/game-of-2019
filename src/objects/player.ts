@@ -15,6 +15,7 @@ export class Player extends Character {
     //@ts-ignore
     private _target: Enemy;
     private _weapon: Phaser.GameObjects.Sprite;
+    private _direction: string;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
         super(scene, x, y, texture);
@@ -33,13 +34,15 @@ export class Player extends Character {
         // states
         this._jumping = false;
         this._pushing = false;
+        this._direction = "right";
 
         // input
         this._cursors = scene.input.keyboard.createCursorKeys();
     }
 
     private initWeapon(): void {
-        this.weapon.setFrame(7);
+        this.weapon.setFrame(3);
+        this.weapon.setDepth(1);
 
         this.bulletDamage = 20;
         this.weaponCount = 1;
@@ -65,17 +68,25 @@ export class Player extends Character {
             this.body.setVelocityX(-200);
             this.anims.play('playerWalking', true);
             this.setFlipX(true);
-            this.weapon.setFlipX(true);
-            this.weapon.setX(this.x-20);
+            this.direction = 'left';
         } else if(this.cursors.right!.isDown) {
             this.body.setVelocityX(200);
             this.anims.play('playerWalking', true);
             this.setFlipX(false);
-            this.weapon.setFlipX(false);
-            this.weapon.setX(this.x+15);
+            this.direction = 'right';
         } else {
             this.body.setVelocityX(0);
             this.anims.stop();
+        }
+    }
+
+    public updateWeapon(): void {
+        if(this.direction == "right") {
+            this.weapon.setX(this.x+10);
+            this.weapon.setFlipX(false);
+        } else {
+            this.weapon.setFlipX(true);
+            this.weapon.setX(this.x-10);
         }
 
         this.weapon.setY(this.y+5);
@@ -92,7 +103,8 @@ export class Player extends Character {
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
             if (this.nextShot < this.scene.time.now || !this.nextShot) {
-                let bullet = new Bullet(this.scene, this.x, this.y - 2, velocity.x, velocity.y);
+                let bullet = new Bullet(this.scene, this.x, this.y+2, velocity.x, velocity.y);
+                bullet.setDepth(0);
 
                 this.bullets.add(bullet);
 
@@ -108,11 +120,13 @@ export class Player extends Character {
         // @ts-ignore
         Phaser.Actions.Call(enemies.getChildren(), (enemy: Enemy) => {
             if(enemy.y < this.y + 15 && enemy.y > this.y - 15) {
-                let distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
+                if(this.direction == "left" && enemy.x < this.x || this.direction == "right" && enemy.x > this.x) {
+                    let distance = Math.hypot(this.x - enemy.x, this.y - enemy.y);
 
-                if (closestDistance === -1 || closestDistance > distance) {
-                    closestDistance = distance;
-                    closestEnemy = enemy;
+                    if (closestDistance === -1 || closestDistance > distance) {
+                        closestDistance = distance;
+                        closestEnemy = enemy;
+                    }
                 }
             }
         }, null);
@@ -182,6 +196,14 @@ export class Player extends Character {
 
     set bullets(value: Phaser.GameObjects.Group) {
         this._bullets = value;
+    }
+
+    get direction(): string {
+        return this._direction;
+    }
+
+    set direction(value: string) {
+        this._direction = value;
     }
 }
 
