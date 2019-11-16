@@ -6,61 +6,47 @@ import {Enemy} from "./enemy";
 export class Player extends Character {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
 
-    private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-    private jumping: boolean;
+    private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    private _jumping: boolean;
     private _pushing: boolean;
     private _bullets: Phaser.GameObjects.Group;
-    private fireRate: number;
-    private nextShot: number;
-    private target?: Enemy;
-    private weapon: Phaser.GameObjects.Sprite;
+    private _fireRate: number;
+    private _nextShot: number;
+    //@ts-ignore
+    private _target: Enemy;
+    private _weapon: Phaser.GameObjects.Sprite;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
         super(scene, x, y, texture);
 
+        // position
         this.x = 400;
         this.y = 575;
 
-        this.fireRate = 5;
+        // equipment
+        this._fireRate = 5;
+        this._nextShot = 0;
+        this._weapon = scene.add.sprite(this.x, this.y, "weapons");
+        this._bullets = this.scene.add.group();
+        this.initWeapon();
 
-        this.nextShot = 0;
-
-        this.bulletDamage = 20;
-        this.weaponCount = 1;
-
-        this.jumping = false;
+        // states
+        this._jumping = false;
         this._pushing = false;
 
-        this._bullets = this.scene.add.group();
+        // input
+        this._cursors = scene.input.keyboard.createCursorKeys();
+    }
 
-        this.cursors = scene.input.keyboard.createCursorKeys();
-
-        this.setScale(2, 2);
-
-        this.weapon = scene.add.sprite(this.x, this.y, "weapons");
+    private initWeapon(): void {
         this.weapon.setFrame(7);
         this.weapon.setScale(2);
 
-        scene.add.existing(this);
+        this.bulletDamage = 20;
+        this.weaponCount = 1;
     }
 
-    get pushing(): boolean {
-        return this._pushing;
-    }
-
-    set pushing(value: boolean) {
-        this._pushing = value;
-    }
-
-    get bullets(): Phaser.GameObjects.Group {
-        return this._bullets;
-    }
-
-    set bullets(value: Phaser.GameObjects.Group) {
-        this._bullets = value;
-    }
-
-    handleInput() {
+    public handleInput(): void {
         if(this.body.blocked.down || this.body.touching.down && this.jumping) {
             this.jumping = false;
         }
@@ -93,15 +79,15 @@ export class Player extends Character {
             this.anims.stop();
         }
 
-        this.weapon.y = this.y+5;
+        this.weapon.setY(this.y+5);
     }
 
-    push(velocityX: number) {
+    public push(velocityX: number): void {
         this.body.setVelocityX(velocityX);
-        this._pushing = true;
+        this.pushing = true;
     }
 
-    shoot() {
+    public shoot(): void {
         if (this.target && this.weaponCount > 0) {
             let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, this.target.y + 2);
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
@@ -116,7 +102,7 @@ export class Player extends Character {
         }
     }
 
-    findTarget(enemies) {
+    public findTarget(enemies): void {
         let closestDistance = -1;
         let closestEnemy;
 
@@ -133,6 +119,70 @@ export class Player extends Character {
         }, null);
 
         this.target = closestEnemy;
+    }
+
+    get cursors(): Phaser.Types.Input.Keyboard.CursorKeys {
+        return this._cursors;
+    }
+
+    set cursors(value: Phaser.Types.Input.Keyboard.CursorKeys) {
+        this._cursors = value;
+    }
+
+    get jumping(): boolean {
+        return this._jumping;
+    }
+
+    set jumping(value: boolean) {
+        this._jumping = value;
+    }
+
+    get fireRate(): number {
+        return this._fireRate;
+    }
+
+    set fireRate(value: number) {
+        this._fireRate = value;
+    }
+
+    get nextShot(): number {
+        return this._nextShot;
+    }
+
+    set nextShot(value: number) {
+        this._nextShot = value;
+    }
+
+    get target(): Enemy {
+        return this._target;
+    }
+
+    set target(value: Enemy) {
+        this._target = value;
+    }
+
+    get weapon(): Phaser.GameObjects.Sprite {
+        return this._weapon;
+    }
+
+    set weapon(value: Phaser.GameObjects.Sprite) {
+        this._weapon = value;
+    }
+
+    get pushing(): boolean {
+        return this._pushing;
+    }
+
+    set pushing(value: boolean) {
+        this._pushing = value;
+    }
+
+    get bullets(): Phaser.GameObjects.Group {
+        return this._bullets;
+    }
+
+    set bullets(value: Phaser.GameObjects.Group) {
+        this._bullets = value;
     }
 }
 
