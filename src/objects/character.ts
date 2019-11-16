@@ -50,6 +50,9 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.hpBar.add(this._hpBarStroke);
         this.hpBar.add(this._hpBarContent);
 
+        this.hpBarContent.setDepth(1);
+        this.hpBarStroke.setDepth(1);
+
         this.hpBarStroke.lineStyle(1, 0x000000);
         this.hpBarStroke.strokeRect(0, 0, 32, 5);
     }
