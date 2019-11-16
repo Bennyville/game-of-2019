@@ -32,6 +32,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
+        this.add.tileSprite(400, 300, 800, 600, "background");
+
         this.player = new Player(this, 0, 0, 'player');
 
         this.platforms = this.add.group();
