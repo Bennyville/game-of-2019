@@ -70,10 +70,17 @@ export class Character extends Phaser.GameObjects.Sprite {
         }
     }
 
+    kill() {
+        this.destroy();
+        this.hpBar.destroy();
+    }
+
     updateHpBar() {
         this.hpBar.clear();
         this.hpBar.x = this.body.x;
         this.hpBar.y = this.body.y;
+        this.hpBar.lineStyle(1, 0x000000);
+        this.hpBar.strokeRect((32 - 32) / -2, -4, 32, 5)
         this.hpBar.fillStyle(0x00ff00, 1);
         this.hpBar.fillRect((32 - 32) / -2, -4, 32 / (100 / this.hp), 3);
     }

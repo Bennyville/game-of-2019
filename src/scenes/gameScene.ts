@@ -88,7 +88,7 @@ export class GameScene extends Phaser.Scene {
             enemy.updateHpBar();
 
             if(enemy.dead) {
-                enemy.destroy();
+                enemy.kill();
             }
         }, null);
 
