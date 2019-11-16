@@ -35,16 +35,14 @@ export class Character extends Phaser.GameObjects.Sprite {
         // equipment
         this._weaponCount = 0;
 
-        this.setScale(2);
-
-        this.initPhysics(10, 16);
+        this.initPhysics(20, 32);
         this.scene.add.existing(this);
     }
 
     private initPhysics(width: number, height: number): void {
         this.scene.physics.world.enable(this);
 
-        this.body.setSize(10, 16);
+        this.body.setSize(width, height);
         this.body.collideWorldBounds = true;
     }
 
@@ -80,7 +78,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {
-            hpBarComponent.setX(this.x - (this.width));
+            hpBarComponent.setX(this.x - (this.width / 2));
             hpBarComponent.setY(this.y-24);
         }, null);
     }

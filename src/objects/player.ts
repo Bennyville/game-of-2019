@@ -40,7 +40,6 @@ export class Player extends Character {
 
     private initWeapon(): void {
         this.weapon.setFrame(7);
-        this.weapon.setScale(2);
 
         this.bulletDamage = 20;
         this.weaponCount = 1;
