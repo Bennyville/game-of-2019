@@ -32,6 +32,7 @@ export class Platform extends Phaser.GameObjects.Graphics {
 
     private initPhysics(): void {
         this.scene.physics.world.enable(this);
+        this.body.checkCollision.down = false;
         this.body.setAllowGravity(false);
         this.body.setImmovable(true);
         this.body.setSize(this.width, this.height);
