@@ -60,7 +60,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         this.physics.add.collider(this.player, this.platforms);
-        this.physics.add.overlap(this.enemies, this.platforms);
+        this.physics.add.collider(this.enemies, this.platforms);
         this.physics.add.overlap(this.player, this.enemies);
     }
 
@@ -87,7 +87,7 @@ export class GameScene extends Phaser.Scene {
         // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.update();
-            enemy.move(this.player.x);
+            enemy.move(this.player.x, this.player.y);
             enemy.updateHpBar();
 
             if(enemy.dead) {
@@ -117,11 +117,11 @@ export class GameScene extends Phaser.Scene {
         });
 
         // @ts-ignore
-        this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
-            if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
-                enemy.body.velocity.x *= -1;
-            }
-        });
+        // this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
+        //     if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
+        //         enemy.body.velocity.x *= -1;
+        //     }
+        // });
 
         if(this.player.dead) {
             this.scene.stop("GameScene");

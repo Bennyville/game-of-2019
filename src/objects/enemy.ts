@@ -24,9 +24,9 @@ export class Enemy extends Character {
         this._xDirection = 0;
     }
 
-    public move(playerX: number): void {
+    public move(playerX: number, playerY: number): void {
         if (this.xSteps === 0) {
-            this.patrolling = Phaser.Math.RND.pick([true, false]);
+            // this.patrolling = Phaser.Math.RND.pick([true, false]);
             this.chase = Phaser.Math.RND.pick([true, false]);
 
             if(this.chase) {
@@ -34,6 +34,12 @@ export class Enemy extends Character {
                     this.xDirection = 0;
                 } else {
                     this.xDirection = 1;
+                }
+
+                // subtract a certain number from the opponent's y position so that they do not jump when the player
+                // jumps onto a platform and is briefly above the opponent's y position
+                if(playerY < this.y - 10 && !this.jumping) {
+                    this.jump();
                 }
             } else {
                 this.xDirection = Phaser.Math.Between(0, 2);
@@ -66,10 +72,6 @@ export class Enemy extends Character {
         } else {
             this.xStep = 0;
             this.xSteps = 0;
-        }
-
-        if(Phaser.Math.Between(0, 20) == 10) {
-            this.jump();
         }
     }
 
