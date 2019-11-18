@@ -66,7 +66,7 @@ export class GameScene extends Phaser.Scene {
 
     update(): void {
         if(!this.player.pushing) {
-            this.player.handleInput();
+            this.player.update();
         }
 
         this.player.findTarget(this.enemies);
@@ -86,6 +86,7 @@ export class GameScene extends Phaser.Scene {
 
         // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
+            enemy.update();
             enemy.move(this.player.x);
             enemy.updateHpBar();
 

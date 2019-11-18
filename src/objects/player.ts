@@ -7,7 +7,6 @@ export class Player extends Character {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
 
     private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-    private _jumping: boolean;
     private _pushing: boolean;
     private _bullets: Phaser.GameObjects.Group;
     private _fireRate: number;
@@ -32,7 +31,6 @@ export class Player extends Character {
         this.initWeapon();
 
         // states
-        this._jumping = false;
         this._pushing = false;
         this._direction = "right";
 
@@ -49,19 +47,12 @@ export class Player extends Character {
     }
 
     public handleInput(): void {
-        if(this.body.blocked.down || this.body.touching.down && this.jumping) {
-            this.jumping = false;
-        }
-
         if(this.cursors.down!.isDown) {
             // this.dodge();
         }
 
         if(this.cursors.up!.isDown) {
-            if(!this.jumping) {
-                this.body.setVelocityY(-500);
-                this.jumping = true;
-            }
+            this.jump();
         }
 
         if(this.cursors.left!.isDown) {
@@ -78,6 +69,12 @@ export class Player extends Character {
             this.body.setVelocityX(0);
             this.anims.stop();
         }
+    }
+
+    public update(): void {
+        super.update();
+
+        this.handleInput();
     }
 
     public updateWeapon(): void {
@@ -140,14 +137,6 @@ export class Player extends Character {
 
     set cursors(value: Phaser.Types.Input.Keyboard.CursorKeys) {
         this._cursors = value;
-    }
-
-    get jumping(): boolean {
-        return this._jumping;
-    }
-
-    set jumping(value: boolean) {
-        this._jumping = value;
     }
 
     get fireRate(): number {

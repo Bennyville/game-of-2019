@@ -67,6 +67,10 @@ export class Enemy extends Character {
             this.xStep = 0;
             this.xSteps = 0;
         }
+
+        if(Phaser.Math.Between(0, 20) == 10) {
+            this.jump();
+        }
     }
 
     get xSteps(): number {

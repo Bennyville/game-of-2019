@@ -12,6 +12,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     private _touchDamage: number;
     private _bulletDamage: number;
     private _weaponCount: number;
+    private _jumping: boolean;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
         super(scene, x, y, texture, frame);
@@ -27,6 +28,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // states
         this._dead = false;
+        this._jumping = false;
 
         // damage
         this._touchDamage = 0;
@@ -74,6 +76,12 @@ export class Character extends Phaser.GameObjects.Sprite {
         }, null);
     }
 
+    public update(): void {
+        if(this.body.blocked.down || this.body.touching.down && this.jumping) {
+            this.jumping = false;
+        }
+    }
+
     public updateHpBar(): void {
         this.hpBarContent.clear();
         this.hpBarContent.fillStyle(0x00ff00, 1);
@@ -84,6 +92,13 @@ export class Character extends Phaser.GameObjects.Sprite {
             hpBarComponent.setX(this.x - (this.width / 2));
             hpBarComponent.setY(this.y-24);
         }, null);
+    }
+
+    protected jump() {
+        if(!this.jumping) {
+            this.body.setVelocityY(-500);
+            this.jumping = true;
+        }
     }
 
     get hp(): number {
@@ -156,5 +171,13 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     set scene(value: Phaser.Scene) {
         this._scene = value;
+    }
+
+    get jumping(): boolean {
+        return this._jumping;
+    }
+
+    set jumping(value: boolean) {
+        this._jumping = value;
     }
 }
