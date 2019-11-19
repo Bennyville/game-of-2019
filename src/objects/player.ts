@@ -115,6 +115,8 @@ export class Player extends Character {
 
                 this.bullets.add(bullet);
 
+                this.scene.sound.play("shot");
+
                 this.nextShot = this.scene.time.now + (1000 / this.fireRate);
             }
         }
