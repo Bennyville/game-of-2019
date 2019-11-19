@@ -19,14 +19,14 @@ export class GameScene extends Phaser.Scene {
         this.anims.create({
             key: 'playerWalking',
             frames: this.anims.generateFrameNumbers('player', { start: 6, end: 9 }),
-            frameRate: 10,
+            frameRate: 16,
             repeat: -1
         });
 
         this.anims.create({
             key: 'enemyWalking',
             frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 3 }),
-            frameRate: 10,
+            frameRate: 16,
             repeat: -1
         });
     }
