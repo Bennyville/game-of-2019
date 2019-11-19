@@ -30,10 +30,14 @@ export class Enemy extends Character {
             // this.chase = Phaser.Math.RND.pick([true, false]);
 
             if(this.chase) {
-                if(playerX > this.x) {
+                if(playerY > this.y) {
                     this.xDirection = 0;
                 } else {
-                    this.xDirection = 1;
+                    if(playerX > this.x) {
+                        this.xDirection = 0;
+                    } else {
+                        this.xDirection = 1;
+                    }
                 }
 
                 // subtract a certain number from the opponent's y position so that they do not jump when the player
