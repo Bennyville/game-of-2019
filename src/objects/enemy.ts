@@ -16,7 +16,7 @@ export class Enemy extends Character {
 
         // states
         this._patrolling = Phaser.Math.RND.pick([true, false]);
-        this._chase = Phaser.Math.RND.pick([true, false]);
+        this._chase = false;
 
         // movement
         this._xSteps = 0;
@@ -27,7 +27,7 @@ export class Enemy extends Character {
     public move(playerX: number, playerY: number): void {
         if (this.xSteps === 0) {
             // this.patrolling = Phaser.Math.RND.pick([true, false]);
-            this.chase = Phaser.Math.RND.pick([true, false]);
+            // this.chase = Phaser.Math.RND.pick([true, false]);
 
             if(this.chase) {
                 if(playerX > this.x) {
@@ -67,6 +67,14 @@ export class Enemy extends Character {
 
         if (this.xStep < this.xSteps) {
             this.x += this.body.velocity.x;
+
+            let distance = Math.hypot(this.x - playerX, this.y - playerY);
+
+            if(distance < 150) {
+                this.chase = true;
+            } else {
+                this.chase = false;
+            }
 
             this.xStep++;
         } else {
