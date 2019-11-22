@@ -36,6 +36,8 @@ export class Player extends Character {
 
         // input
         this._cursors = scene.input.keyboard.createCursorKeys();
+
+        this.initEvents();
     }
 
     private initWeapon(): void {
@@ -44,6 +46,14 @@ export class Player extends Character {
 
         this.bulletDamage = 20;
         this.weaponCount = 1;
+    }
+
+    private initEvents(): void {
+        this.on('animationrepeat', () => {
+            if(this.anims.currentAnim.key == 'playerWalking' && this.body.blocked.down || this.body.touching.down) {
+                this.scene.sound.play("step");
+            }
+        });
     }
 
     public handleInput(): void {
@@ -127,6 +137,8 @@ export class Player extends Character {
                 bullet.setDepth(0);
 
                 this.bullets.add(bullet);
+
+                this.scene.sound.play("shot");
 
                 this.nextShot = this.scene.time.now + (1000 / this.fireRate);
             }
