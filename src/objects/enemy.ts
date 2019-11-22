@@ -7,6 +7,7 @@ export class Enemy extends Character {
     private _xSteps: number;
     private _xStep: number;
     private _xDirection: integer;
+    private _nextJump: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
         super(scene, x, y, texture);
@@ -22,6 +23,7 @@ export class Enemy extends Character {
         this._xSteps = 0;
         this._xStep = 0;
         this._xDirection = 0;
+        this._nextJump = 0;
     }
 
     public move(playerX: number, playerY: number): void {
@@ -72,6 +74,12 @@ export class Enemy extends Character {
         if (this.xStep < this.xSteps) {
             this.x += this.body.velocity.x;
 
+            if(this.nextJump == 0 || this.nextJump < this.scene.time.now && Phaser.Math.Between(0, 5) == 5) {
+                this.jump();
+
+                this.nextJump = this.scene.time.now + 5000
+            }
+
             let distance = Math.hypot(this.x - playerX, this.y - playerY);
 
             if(distance < 250) {
@@ -109,6 +117,14 @@ export class Enemy extends Character {
 
     set xDirection(value: number) {
         this._xDirection = value;
+    }
+
+    get nextJump(): number {
+        return this._nextJump;
+    }
+
+    set nextJump(value: number) {
+        this._nextJump = value;
     }
 
     get patrolling(): boolean {
