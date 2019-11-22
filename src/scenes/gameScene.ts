@@ -77,7 +77,7 @@ export class GameScene extends Phaser.Scene {
 
         this.enemies = this.add.group();
 
-        for(let i = 0; i < 10; i++) {
+        for(let i = 0; i < 3; i++) {
             this.enemies.add(new Enemy(this, 0, 0, 'enemy'));
         }
 
