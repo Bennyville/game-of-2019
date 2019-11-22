@@ -61,8 +61,16 @@ export class GameScene extends Phaser.Scene {
 
         // Fourth stage
         this.platforms.add(new Platform(this, 0, 300, 50, 20));
-        this.platforms.add(new Platform(this, 100, 300, 600, 20));
+        this.platforms.add(new Platform(this, 100, 300, 167, 20));
+        this.platforms.add(new Platform(this, 317, 300, 167, 20));
+        this.platforms.add(new Platform(this, 534, 300, 167, 20));
         this.platforms.add(new Platform(this, 750, 300, 50, 20));
+
+        // Fifth stage
+        this.platforms.add(new Platform(this, 0, 225, 50, 20));
+        this.platforms.add(new Platform(this, 100, 225, 275, 20));
+        this.platforms.add(new Platform(this, 425, 225, 275, 20));
+        this.platforms.add(new Platform(this, 750, 225, 50, 20));
 
         this.enemies = this.add.group();
 
