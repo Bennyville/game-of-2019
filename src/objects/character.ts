@@ -5,6 +5,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     private _scene: Phaser.Scene;
     private _hp: number;
+    private _maxHp: number;
     private _hpBar: Phaser.GameObjects.Group;
     private _hpBarStroke: Phaser.GameObjects.Graphics;
     private _hpBarContent: Phaser.GameObjects.Graphics;
@@ -21,6 +22,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // hp
         this._hp = 100;
+        this._maxHp = 100;
         this._hpBar = this.scene.add.group();
         this._hpBarStroke = this.scene.add.graphics();
         this._hpBarContent = this.scene.add.graphics();
@@ -32,7 +34,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // damage
         this._touchDamage = 0;
-        this._bulletDamage = 0;
+        this._bulletDamage = 10;
 
         // equipment
         this._weaponCount = 0;
@@ -107,6 +109,14 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     set hp(value: number) {
         this._hp = value;
+    }
+
+    get maxHp(): number {
+        return this._maxHp;
+    }
+
+    set maxHp(value: number) {
+        this._maxHp = value;
     }
 
     get hpBar(): Phaser.GameObjects.Group {

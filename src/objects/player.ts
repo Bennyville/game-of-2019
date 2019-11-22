@@ -71,6 +71,29 @@ export class Player extends Character {
         }
     }
 
+    public applyUpgrade(upgrade): void {
+        switch(upgrade) {
+            case 'firerate':
+                this.fireRate += 1;
+                break;
+            case 'healing':
+                this.hp += 50;
+
+                if(this.hp > this.maxHp) {
+                    this.hp = this.maxHp;
+                }
+                break;
+            case 'moreHp':
+                this.maxHp += 100;
+                break;
+            case 'damage':
+                this.bulletDamage += 5;
+                break;
+            default:
+                break;
+        }
+    }
+
     public update(): void {
         super.update();
 
