@@ -8,11 +8,14 @@ export class GameScene extends Phaser.Scene {
     private player!: Player;
     private platforms!: Phaser.GameObjects.Group;
     private enemies!: Phaser.GameObjects.Group;
+    private currentLevel: number;
 
     constructor() {
         super({
             key: "GameScene"
         });
+
+        this.currentLevel = 0;
     }
 
     init(): void {
@@ -84,6 +87,11 @@ export class GameScene extends Phaser.Scene {
     }
 
     update(): void {
+        if(this.enemies.getLength() == 0) {
+            this.currentLevel++;
+            this.scene.restart();
+        }
+
         if(!this.player.pushing) {
             this.player.update();
         }
