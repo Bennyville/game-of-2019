@@ -74,15 +74,15 @@ export class Enemy extends Character {
         if (this.xStep < this.xSteps) {
             this.x += this.body.velocity.x;
 
-            if(this.nextJump == 0 || this.nextJump < this.scene.time.now && Phaser.Math.Between(0, 5) == 5) {
+            if(this.nextJump == 0 || this.nextJump < this.scene.time.now && Phaser.Math.Between(0, 5) == 5 && this.y > 225) {
                 this.jump();
 
-                this.nextJump = this.scene.time.now + 5000
+                this.nextJump = this.scene.time.now + Phaser.Math.Between(3000, 10000);
             }
 
             let distance = Math.hypot(this.x - playerX, this.y - playerY);
 
-            if(distance < 250) {
+            if(distance < 400) {
                 this.chase = true;
             } else {
                 this.chase = false;

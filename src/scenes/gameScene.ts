@@ -9,13 +9,14 @@ export class GameScene extends Phaser.Scene {
     private platforms!: Phaser.GameObjects.Group;
     private enemies!: Phaser.GameObjects.Group;
     private currentLevel: number;
+    private texts: Phaser.GameObjects.Text[] = [];
 
     constructor() {
         super({
             key: "GameScene"
         });
 
-        this.currentLevel = 0;
+        this.currentLevel = 1;
     }
 
     init(): void {
@@ -36,6 +37,14 @@ export class GameScene extends Phaser.Scene {
 
     create(): void {
         this.add.tileSprite(400, 300, 800, 600, "background");
+
+        this.texts.push(
+            this.add.text(
+                10,
+                10,
+                "Level " + this.currentLevel
+            )
+        );
 
         this.player = new Player(this, 0, 0, 'player');
 
@@ -77,7 +86,7 @@ export class GameScene extends Phaser.Scene {
 
         this.enemies = this.add.group();
 
-        for(let i = 0; i < 3; i++) {
+        for(let i = 0; i < this.currentLevel*2; i++) {
             this.enemies.add(new Enemy(this, 0, 0, 'enemy'));
         }
 
@@ -127,12 +136,12 @@ export class GameScene extends Phaser.Scene {
         // @ts-ignore
         this.physics.overlap(this.player, this.enemies, (player: Player, enemy: Enemy) => {
             if(player.x < enemy.x) {
-                player.push(-1000);
+                player.push(-3000);
             } else {
-                player.push(1000);
+                player.push(3000);
             }
 
-            player.damage(5);
+            player.damage(4+this.currentLevel);
         });
 
         this.player.updateWeapon();
