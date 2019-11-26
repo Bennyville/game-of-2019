@@ -1,5 +1,6 @@
 import "phaser"
 import {Character} from "./character";
+import {Bullet} from "./bullet";
 
 export class Enemy extends Character {
     private _patrolling: boolean;
@@ -24,6 +25,28 @@ export class Enemy extends Character {
         this._xStep = 0;
         this._xDirection = 0;
         this._nextJump = 0;
+    }
+
+    public shoot() {
+        let bulletVX = 0;
+
+        switch(this.xDirection) {
+            case 0:
+                bulletVX = 5;
+                break;
+            case 1:
+                bulletVX = -5;
+                break;
+        }
+
+        if(bulletVX != 0 && Phaser.Math.Between(0, 100) == 100) {
+            let bullet = new Bullet(this.scene, this.x, this.y+2, bulletVX, 0);
+            bullet.setDepth(0);
+
+            this.bullets.add(bullet);
+
+            // this.scene.sound.play("shot");
+        }
     }
 
     public move(playerX: number, playerY: number): void {

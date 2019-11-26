@@ -13,6 +13,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     private _touchDamage: number;
     private _bulletDamage: number;
     private _weaponCount: number;
+    private _bullets: Phaser.GameObjects.Group;
     private _jumping: boolean;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string) {
@@ -38,6 +39,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // equipment
         this._weaponCount = 0;
+        this._bullets = this.scene.add.group();
 
         this.initPhysics(20, 32);
         this.scene.add.existing(this);
@@ -189,5 +191,13 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     set jumping(value: boolean) {
         this._jumping = value;
+    }
+
+    get bullets(): Phaser.GameObjects.Group {
+        return this._bullets;
+    }
+
+    set bullets(value: Phaser.GameObjects.Group) {
+        this._bullets = value;
     }
 }

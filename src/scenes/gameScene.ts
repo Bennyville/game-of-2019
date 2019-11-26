@@ -118,17 +118,24 @@ export class GameScene extends Phaser.Scene {
         // @ts-ignore
         Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
             bullet.move();
+            console.log(bullet.vx);
         }, null);
 
         // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.update();
             enemy.move(this.player.x, this.player.y);
+            enemy.shoot();
             enemy.updateHpBar();
 
             if(enemy.dead) {
                 enemy.kill();
             }
+
+            // @ts-ignore
+            Phaser.Actions.Call(enemy.bullets.getChildren(), (bullet: Bullet) => {
+                bullet.move();
+            }, null);
         }, null);
 
         this.player.pushing = false;

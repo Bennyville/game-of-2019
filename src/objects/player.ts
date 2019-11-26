@@ -8,7 +8,6 @@ export class Player extends Character {
 
     private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private _pushing: boolean;
-    private _bullets: Phaser.GameObjects.Group;
     private _fireRate: number;
     private _nextShot: number;
     //@ts-ignore
@@ -27,7 +26,6 @@ export class Player extends Character {
         this._fireRate = 5;
         this._nextShot = 0;
         this._weapon = scene.add.sprite(this.x, this.y, "weapons");
-        this._bullets = this.scene.add.group();
         this.initWeapon();
 
         // states
@@ -212,14 +210,6 @@ export class Player extends Character {
 
     set pushing(value: boolean) {
         this._pushing = value;
-    }
-
-    get bullets(): Phaser.GameObjects.Group {
-        return this._bullets;
-    }
-
-    set bullets(value: Phaser.GameObjects.Group) {
-        this._bullets = value;
     }
 
     get direction(): string {
