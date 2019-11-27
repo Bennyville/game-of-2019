@@ -39,7 +39,7 @@ export class Enemy extends Character {
                 break;
         }
 
-        if(bulletVX != 0 && Phaser.Math.Between(0, 100) == 100) {
+        if(bulletVX != 0 && Phaser.Math.Between(0, 100) == 100 && (this.body.touching.down || this.body.blocked.down)) {
             let bullet = new Bullet(this.scene, this.x, this.y+2, bulletVX, 0);
             bullet.setDepth(0);
 

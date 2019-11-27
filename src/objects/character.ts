@@ -73,6 +73,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     public kill(): void {
         this.destroy();
+        this.bullets.destroy();
 
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {

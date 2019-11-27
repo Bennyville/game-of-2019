@@ -118,24 +118,32 @@ export class GameScene extends Phaser.Scene {
         // @ts-ignore
         Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
             bullet.move();
-            console.log(bullet.vx);
         }, null);
 
         // @ts-ignore
         Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
             enemy.update();
             enemy.move(this.player.x, this.player.y);
-            enemy.shoot();
-            enemy.updateHpBar();
 
-            if(enemy.dead) {
-                enemy.kill();
-            }
+            enemy.shoot();
+            this.physics.add.overlap(enemy.bullets, this.player);
+
+            // @ts-ignore
+            this.physics.overlap(enemy.bullets, this.player, (bullet: Bullet, player: Player) => {
+                bullet.destroy();
+                player.damage(enemy.bulletDamage);
+            });
+
+            enemy.updateHpBar();
 
             // @ts-ignore
             Phaser.Actions.Call(enemy.bullets.getChildren(), (bullet: Bullet) => {
                 bullet.move();
             }, null);
+
+            if(enemy.dead) {
+                enemy.kill();
+            }
         }, null);
 
         this.player.pushing = false;
