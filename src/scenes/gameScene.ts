@@ -111,8 +111,21 @@ export class GameScene extends Phaser.Scene {
 
         this.physics.add.overlap(this.enemies, this.player.bullets);
 
-        this.physics.world.on('worldbounds', (bullet) => {
-            bullet.gameObject.destroy();
+        this.physics.world.on('worldbounds', (object) => {
+            if(object.gameObject instanceof Bullet) {
+                object.gameObject.destroy();
+            }
+
+            if(object.gameObject instanceof Enemy) {
+                let enemy: Enemy = object.gameObject;
+
+                if(object.blocked.right) {
+                    console.log('blocked.right');
+                    enemy.xDirection = 1;
+                } else if(object.blocked.left) {
+                    enemy.xDirection = 0;
+                }
+            }
         });
 
         // @ts-ignore

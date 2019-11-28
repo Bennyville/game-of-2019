@@ -50,6 +50,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         this.body.setSize(width, height);
         this.body.collideWorldBounds = true;
+        this.body.onWorldBounds = true;
     }
 
     private initHpBar(): void {
