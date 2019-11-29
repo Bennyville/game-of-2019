@@ -120,7 +120,6 @@ export class GameScene extends Phaser.Scene {
                 let enemy: Enemy = object.gameObject;
 
                 if(object.blocked.right) {
-                    console.log('blocked.right');
                     enemy.xDirection = 1;
                 } else if(object.blocked.left) {
                     enemy.xDirection = 0;
