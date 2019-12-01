@@ -186,6 +186,7 @@ export class GameScene extends Phaser.Scene {
         this.upgradeMenu.add(firstUpgradeButton);
         this.upgradeMenu.add(secondUpgradeButton);
         this.upgradeMenu.add(headline);
+        this.upgradeMenu.setDepth(2, 1);
     }
 
     update(): void {

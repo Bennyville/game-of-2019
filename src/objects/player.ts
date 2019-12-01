@@ -25,7 +25,7 @@ export class Player extends Character {
         // equipment
         this._fireRate = 5;
         this._nextShot = 0;
-        this._weapon = scene.add.sprite(this.x, this.y, "weapons");
+        this._weapon = scene.add.sprite(this.x+10, this.y+15, "weapons");
         this.initWeapon();
 
         // states
