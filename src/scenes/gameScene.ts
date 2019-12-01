@@ -10,8 +10,10 @@ export class GameScene extends Phaser.Scene {
     private enemies!: Phaser.GameObjects.Group;
     private currentLevel: number;
     private texts: Phaser.GameObjects.Text[] = [];
-    private upgradeMenu!: boolean;
+    private showUpgradeMenu!: boolean;
+    private upgradeMenu!: Phaser.GameObjects.Group;
     private playerState!: object;
+    private upgradeMenuBg!: Phaser.GameObjects.Graphics;
 
     constructor() {
         super({
@@ -42,7 +44,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
-        this.upgradeMenu = true;
+        this.showUpgradeMenu = true;
 
         this.add.tileSprite(400, 300, 800, 600, "background");
 
@@ -106,6 +108,10 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.enemies, this.platforms);
         this.physics.add.overlap(this.player, this.enemies);
 
+        this.upgradeMenuBg = this.add.graphics();
+        this.upgradeMenuBg.fillStyle(0x000000, .8);
+        this.upgradeMenuBg.fillRect(0, 0, this.sys.canvas.width, this.sys.canvas.height);
+
         let upgrades = [
           'firerate',
           'healing',
@@ -119,54 +125,73 @@ export class GameScene extends Phaser.Scene {
         let secondUpgrade = shuffledUpgrades[1];
 
         let firstUpgradeButton = this.add.text(
-            this.sys.canvas.width / 2 - 100,
-            this.sys.canvas.height / 2 - 10,
-            firstUpgrade
-        )
+            0,
+            0,
+            '> ' + this.getUpgradeText(firstUpgrade)
+        );
 
         firstUpgradeButton
             .setInteractive()
-            .setX(this.sys.canvas.width / 2 - firstUpgradeButton.width)
+            .setX(this.sys.canvas.width / 2 - firstUpgradeButton.width / 2)
             .setY(this.sys.canvas.height / 2)
             .on('pointerdown', () => {
                 this.player.applyUpgrade(firstUpgrade);
-                this.upgradeMenu = false;
+                this.showUpgradeMenu = false;
             })
             .on('pointerover', function() {
                 // @ts-ignore
-                console.log(this.setStyle({fill:'#000000'}))
+                this.setStyle({fill:'#000000'});
             })
             .on('pointerout', function() {
                 // @ts-ignore
-                console.log(this.setStyle({fill:'#ffffff'}))
+                this.setStyle({fill:'#ffffff'});
             })
 
         let secondUpgradeButton = this.add.text(
-            this.sys.canvas.width / 2 - 100,
-            this.sys.canvas.height / 2 + 10,
-            secondUpgrade
+            0,
+            0,
+            '> ' + this.getUpgradeText(secondUpgrade)
         );
 
         secondUpgradeButton
             .setInteractive()
-            .setX(this.sys.canvas.width / 2 - secondUpgradeButton.width)
-            .setY(this.sys.canvas.height / 2 + firstUpgradeButton.height)
+            .setX(this.sys.canvas.width / 2 - secondUpgradeButton.width / 2)
+            .setY(this.sys.canvas.height / 2 + firstUpgradeButton.height + 10)
             .on('pointerdown', () => {
                 this.player.applyUpgrade(secondUpgrade);
-                this.upgradeMenu = false;
+                this.showUpgradeMenu = false;
             })
             .on('pointerover', function() {
                 // @ts-ignore
-                console.log(this.setStyle({fill:'#000000'}))
+                this.setStyle({fill:'#000000'});
             })
             .on('pointerout', function() {
                 // @ts-ignore
-                console.log(this.setStyle({fill:'#ffffff'}))
+                this.setStyle({fill:'#ffffff'});
             });
+
+        let headline = this.add.text(
+            0,
+            0,
+            "Choose Upgrade"
+        )
+            .setFontSize(24);
+
+        headline
+            .setX(this.sys.canvas.width / 2 - headline.width / 2)
+            .setY(this.sys.canvas.height / 2 - firstUpgradeButton.height - 20);
+
+        this.upgradeMenu = this.add.group();
+        this.upgradeMenu.add(this.upgradeMenuBg);
+        this.upgradeMenu.add(firstUpgradeButton);
+        this.upgradeMenu.add(secondUpgradeButton);
+        this.upgradeMenu.add(headline);
     }
 
     update(): void {
-        if(!this.upgradeMenu) {
+        if(!this.showUpgradeMenu) {
+            this.upgradeMenu.destroy(true);
+
             if (this.enemies.getLength() == 0) {
                 let playerState = this.player.getState();
                 this.currentLevel++;
@@ -264,6 +289,21 @@ export class GameScene extends Phaser.Scene {
             }
 
             this.player.updateHpBar();
+        }
+    }
+
+    getUpgradeText(upgrade) {
+        switch(upgrade) {
+            case 'firerate':
+                return 'Firerate +1';
+            case 'healing':
+                return 'Health +50';
+            case 'moreHp':
+                return 'Max health +100';
+            case 'damage':
+                return 'Damage +5';
+            default:
+                return 'Unknown upgrade';
         }
     }
 }
