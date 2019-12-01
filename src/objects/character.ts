@@ -13,6 +13,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     private _touchDamage: number;
     private _bulletDamage: number;
     private _weaponCount: number;
+    private _fireRate: number;
     private _bullets: Phaser.GameObjects.Group;
     private _jumping: boolean;
 
@@ -39,6 +40,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // equipment
         this._weaponCount = 0;
+        this._fireRate = 3;
         this._bullets = this.scene.add.group();
 
         this.initPhysics(20, 32);
@@ -68,6 +70,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.hp -= amount;
 
         if(this.hp <= 0) {
+            this.hp = 0;
             this.dead = true;
         }
     }
@@ -95,7 +98,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     public updateHpBar(): void {
         this.hpBarContent.clear();
         this.hpBarContent.fillStyle(0x00ff00, 1);
-        this.hpBarContent.fillRect(1, 1, 31 / (100 / this._hp), 3);
+        this.hpBarContent.fillRect(1, 1, 31 / (this.maxHp / this._hp), 3);
 
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {
@@ -118,6 +121,7 @@ export class Character extends Phaser.GameObjects.Sprite {
             touchDamage: this.touchDamage,
             bulletDamage: this.bulletDamage,
             weaponCount: this.weaponCount,
+            fireRate: this.fireRate,
         }
     }
 
@@ -127,6 +131,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.touchDamage = state.touchDamage;
         this.bulletDamage = state.bulletDamage;
         this.weaponCount = state.weaponCount;
+        this.fireRate = state.fireRate;
     }
 
     get hp(): number {
@@ -223,5 +228,13 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     set bullets(value: Phaser.GameObjects.Group) {
         this._bullets = value;
+    }
+
+    get fireRate(): number {
+        return this._fireRate;
+    }
+
+    set fireRate(value: number) {
+        this._fireRate = value;
     }
 }

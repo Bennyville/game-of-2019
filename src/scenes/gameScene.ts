@@ -12,7 +12,7 @@ export class GameScene extends Phaser.Scene {
     private texts: Phaser.GameObjects.Text[] = [];
     private showUpgradeMenu!: boolean;
     private upgradeMenu!: Phaser.GameObjects.Group;
-    private playerState!: object;
+    private playerState?: object;
     private upgradeMenuBg!: Phaser.GameObjects.Graphics;
 
     constructor() {
@@ -38,7 +38,7 @@ export class GameScene extends Phaser.Scene {
             repeat: -1
         });
 
-        if(data.hasOwnProperty('playerState')) {
+        if(data.hasOwnProperty('playerState') && this.currentLevel > 1) {
             this.playerState = data.playerState;
         }
     }
@@ -48,12 +48,10 @@ export class GameScene extends Phaser.Scene {
 
         this.add.tileSprite(400, 300, 800, 600, "background");
 
-        this.texts.push(
-            this.add.text(
-                10,
-                10,
-                "Level " + this.currentLevel
-            )
+        this.add.text(
+            30,
+            30,
+            "Level " + this.currentLevel
         );
 
         this.player = new Player(this, 0, 0, 'player');
@@ -285,6 +283,8 @@ export class GameScene extends Phaser.Scene {
             // });
 
             if (this.player.dead) {
+                this.currentLevel = 1;
+                this.playerState = undefined;
                 this.scene.stop("GameScene");
                 this.scene.start("MainMenuScene");
             }

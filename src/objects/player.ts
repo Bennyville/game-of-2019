@@ -8,7 +8,6 @@ export class Player extends Character {
 
     private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
     private _pushing: boolean;
-    private _fireRate: number;
     private _nextShot: number;
     //@ts-ignore
     private _target: Enemy;
@@ -23,7 +22,6 @@ export class Player extends Character {
         this.y = 575;
 
         // equipment
-        this._fireRate = 5;
         this._nextShot = 0;
         this._weapon = scene.add.sprite(this.x+10, this.y+15, "weapons");
         this.initWeapon();
@@ -170,14 +168,6 @@ export class Player extends Character {
 
     set cursors(value: Phaser.Types.Input.Keyboard.CursorKeys) {
         this._cursors = value;
-    }
-
-    get fireRate(): number {
-        return this._fireRate;
-    }
-
-    set fireRate(value: number) {
-        this._fireRate = value;
     }
 
     get nextShot(): number {
