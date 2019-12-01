@@ -105,11 +105,7 @@ export class Enemy extends Character {
 
             let distance = Math.hypot(this.x - playerX, this.y - playerY);
 
-            if(distance < 400) {
-                this.chase = true;
-            } else {
-                this.chase = false;
-            }
+            this.chase = distance < 400;
 
             this.xStep++;
         } else {
