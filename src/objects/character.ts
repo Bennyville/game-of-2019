@@ -111,6 +111,24 @@ export class Character extends Phaser.GameObjects.Sprite {
         }
     }
 
+    public getState() {
+        return {
+            hp: this.hp,
+            maxHp: this.maxHp,
+            touchDamage: this.touchDamage,
+            bulletDamage: this.bulletDamage,
+            weaponCount: this.weaponCount,
+        }
+    }
+
+    public applyState(state) {
+        this.hp = state.hp;
+        this.maxHp = state.maxHp;
+        this.touchDamage = state.touchDamage;
+        this.bulletDamage = state.bulletDamage;
+        this.weaponCount = state.weaponCount;
+    }
+
     get hp(): number {
         return this._hp;
     }

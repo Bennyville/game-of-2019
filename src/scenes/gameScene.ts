@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
     private currentLevel: number;
     private texts: Phaser.GameObjects.Text[] = [];
     private upgradeMenu!: boolean;
+    private playerState!: object;
 
     constructor() {
         super({
@@ -20,7 +21,7 @@ export class GameScene extends Phaser.Scene {
         this.currentLevel = 1;
     }
 
-    init(): void {
+    init(data): void {
         this.anims.create({
             key: 'playerWalking',
             frames: this.anims.generateFrameNumbers('player', { start: 6, end: 9 }),
@@ -34,6 +35,10 @@ export class GameScene extends Phaser.Scene {
             frameRate: 16,
             repeat: -1
         });
+
+        if(data.hasOwnProperty('playerState')) {
+            this.playerState = data.playerState;
+        }
     }
 
     create(): void {
@@ -50,6 +55,10 @@ export class GameScene extends Phaser.Scene {
         );
 
         this.player = new Player(this, 0, 0, 'player');
+
+        if(this.playerState) {
+            this.player.applyState(this.playerState);
+        }
 
         this.platforms = this.add.group();
 
@@ -159,8 +168,9 @@ export class GameScene extends Phaser.Scene {
     update(): void {
         if(!this.upgradeMenu) {
             if (this.enemies.getLength() == 0) {
+                let playerState = this.player.getState();
                 this.currentLevel++;
-                this.scene.restart();
+                this.scene.restart({playerState: playerState});
             }
 
             if (!this.player.pushing) {
