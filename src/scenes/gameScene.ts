@@ -10,6 +10,7 @@ export class GameScene extends Phaser.Scene {
     private enemies!: Phaser.GameObjects.Group;
     private currentLevel: number;
     private texts: Phaser.GameObjects.Text[] = [];
+    private upgradeMenu!: boolean;
 
     constructor() {
         super({
@@ -36,6 +37,8 @@ export class GameScene extends Phaser.Scene {
     }
 
     create(): void {
+        this.upgradeMenu = true;
+
         this.add.tileSprite(400, 300, 800, 600, "background");
 
         this.texts.push(
@@ -93,104 +96,164 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.enemies, this.platforms);
         this.physics.add.overlap(this.player, this.enemies);
+
+        let upgrades = [
+          'firerate',
+          'healing',
+          'moreHp',
+          'damage'
+        ];
+
+        let shuffledUpgrades = Phaser.Math.RND.shuffle(upgrades);
+
+        let firstUpgrade = shuffledUpgrades[0];
+        let secondUpgrade = shuffledUpgrades[1];
+
+        let firstUpgradeButton = this.add.text(
+            this.sys.canvas.width / 2 - 100,
+            this.sys.canvas.height / 2 - 10,
+            firstUpgrade
+        )
+
+        firstUpgradeButton
+            .setInteractive()
+            .setX(this.sys.canvas.width / 2 - firstUpgradeButton.width)
+            .setY(this.sys.canvas.height / 2)
+            .on('pointerdown', () => {
+                this.player.applyUpgrade(firstUpgrade);
+                this.upgradeMenu = false;
+            })
+            .on('pointerover', function() {
+                // @ts-ignore
+                console.log(this.setStyle({fill:'#000000'}))
+            })
+            .on('pointerout', function() {
+                // @ts-ignore
+                console.log(this.setStyle({fill:'#ffffff'}))
+            })
+
+        let secondUpgradeButton = this.add.text(
+            this.sys.canvas.width / 2 - 100,
+            this.sys.canvas.height / 2 + 10,
+            secondUpgrade
+        );
+
+        secondUpgradeButton
+            .setInteractive()
+            .setX(this.sys.canvas.width / 2 - secondUpgradeButton.width)
+            .setY(this.sys.canvas.height / 2 + firstUpgradeButton.height)
+            .on('pointerdown', () => {
+                this.player.applyUpgrade(secondUpgrade);
+                this.upgradeMenu = false;
+            })
+            .on('pointerover', function() {
+                // @ts-ignore
+                console.log(this.setStyle({fill:'#000000'}))
+            })
+            .on('pointerout', function() {
+                // @ts-ignore
+                console.log(this.setStyle({fill:'#ffffff'}))
+            });
     }
 
     update(): void {
-        if(this.enemies.getLength() == 0) {
-            this.currentLevel++;
-            this.scene.restart();
-        }
-
-        if(!this.player.pushing) {
-            this.player.update();
-        }
-
-        this.player.findTarget(this.enemies);
-
-        this.player.shoot();
-
-        this.physics.add.overlap(this.enemies, this.player.bullets);
-
-        this.physics.world.on('worldbounds', (object) => {
-            if(object.gameObject instanceof Bullet) {
-                object.gameObject.destroy();
+        if(!this.upgradeMenu) {
+            if (this.enemies.getLength() == 0) {
+                this.currentLevel++;
+                this.scene.restart();
             }
 
-            if(object.gameObject instanceof Enemy) {
-                let enemy: Enemy = object.gameObject;
+            if (!this.player.pushing) {
+                this.player.update();
+            }
 
-                if(object.blocked.right) {
-                    enemy.xDirection = 1;
-                } else if(object.blocked.left) {
-                    enemy.xDirection = 0;
+            this.player.findTarget(this.enemies);
+
+            this.player.shoot();
+
+            this.physics.add.overlap(this.enemies, this.player.bullets);
+
+            this.physics.world.on('worldbounds', (object) => {
+                if (object.gameObject instanceof Bullet) {
+                    object.gameObject.destroy();
                 }
-            }
-        });
 
-        // @ts-ignore
-        Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
-            bullet.move();
-        }, null);
+                if (object.gameObject instanceof Enemy) {
+                    let enemy: Enemy = object.gameObject;
 
-        // @ts-ignore
-        Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
-            enemy.update();
-            enemy.move(this.player.x, this.player.y);
-
-            enemy.shoot();
-            this.physics.add.overlap(enemy.bullets, this.player);
-
-            // @ts-ignore
-            this.physics.overlap(enemy.bullets, this.player, (bullet: Bullet, player: Player) => {
-                bullet.destroy();
-                player.damage(enemy.bulletDamage);
+                    if (object.blocked.right) {
+                        enemy.xDirection = 1;
+                    } else if (object.blocked.left) {
+                        enemy.xDirection = 0;
+                    }
+                }
             });
 
-            enemy.updateHpBar();
-
             // @ts-ignore
-            Phaser.Actions.Call(enemy.bullets.getChildren(), (bullet: Bullet) => {
+            Phaser.Actions.Call(this.player.bullets.getChildren(), (bullet: Bullet) => {
                 bullet.move();
             }, null);
 
-            if(enemy.dead) {
-                enemy.kill();
+            // @ts-ignore
+            Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
+                enemy.update();
+                enemy.move(this.player.x, this.player.y);
+
+                enemy.shoot();
+                this.physics.add.overlap(enemy.bullets, this.player);
+
+                // @ts-ignore
+                this.physics.overlap(enemy.bullets, this.player, (bullet: Bullet, player: Player) => {
+                    bullet.destroy();
+                    player.damage(enemy.bulletDamage);
+                });
+
+                enemy.updateHpBar();
+
+                // @ts-ignore
+                Phaser.Actions.Call(enemy.bullets.getChildren(), (bullet: Bullet) => {
+                    bullet.move();
+                }, null);
+
+                if (enemy.dead) {
+                    enemy.kill();
+                }
+            }, null);
+
+            this.player.pushing = false;
+
+            // @ts-ignore
+            this.physics.overlap(this.player, this.enemies, (player: Player, enemy: Enemy) => {
+                if (player.x < enemy.x) {
+                    player.push(-3000);
+                } else {
+                    player.push(3000);
+                }
+
+                player.damage(4 + this.currentLevel);
+            });
+
+            this.player.updateWeapon();
+
+            // @ts-ignore
+            this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
+                bullet.destroy();
+                enemy.damage(this.player.bulletDamage);
+            });
+
+            // @ts-ignore
+            // this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
+            //     if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
+            //         enemy.body.velocity.x *= -1;
+            //     }
+            // });
+
+            if (this.player.dead) {
+                this.scene.stop("GameScene");
+                this.scene.start("MainMenuScene");
             }
-        }, null);
 
-        this.player.pushing = false;
-
-        // @ts-ignore
-        this.physics.overlap(this.player, this.enemies, (player: Player, enemy: Enemy) => {
-            if(player.x < enemy.x) {
-                player.push(-3000);
-            } else {
-                player.push(3000);
-            }
-
-            player.damage(4+this.currentLevel);
-        });
-
-        this.player.updateWeapon();
-
-        // @ts-ignore
-        this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
-            bullet.destroy();
-            enemy.damage(this.player.bulletDamage);
-        });
-
-        // @ts-ignore
-        // this.physics.collide(this.enemies, this.platforms, (enemy: Enemy, platform: Platform) => {
-        //     if(enemy.patrolling && (enemy.body.velocity.x > 0 && enemy.x + 20 >= platform.x + platform.width) || (enemy.body.velocity.x < 0 && enemy.x <= platform.x)) {
-        //         enemy.body.velocity.x *= -1;
-        //     }
-        // });
-
-        if(this.player.dead) {
-            this.scene.stop("GameScene");
-            this.scene.start("MainMenuScene");
+            this.player.updateHpBar();
         }
-
-        this.player.updateHpBar();
     }
 }
