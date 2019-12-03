@@ -90,10 +90,11 @@ export class Player extends Character {
                 }
                 break;
             case 'moreHp':
-                this.maxHp += 100;
+                this.maxHp += 25;
+                this.hp += 25;
                 break;
             case 'damage':
-                this.bulletDamage += 5;
+                this.bulletDamage += 2;
                 break;
             default:
                 break;

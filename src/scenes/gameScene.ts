@@ -310,9 +310,9 @@ export class GameScene extends Phaser.Scene {
             case 'healing':
                 return 'Heal +50';
             case 'moreHp':
-                return 'Healthpoints +100';
+                return 'Healthpoints +25';
             case 'damage':
-                return 'Damage +5';
+                return 'Damage +2';
             default:
                 return 'Unknown upgrade';
         }
