@@ -27,7 +27,7 @@ export class Enemy extends Character {
         this._nextJump = 0;
     }
 
-    public shoot() {
+    public shoot(bullets: Phaser.GameObjects.Group) {
         let bulletVX = 0;
 
         switch(this.xDirection) {
@@ -43,7 +43,7 @@ export class Enemy extends Character {
             let bullet = new Bullet(this.scene, this.x, this.y+2, bulletVX, 0);
             bullet.setDepth(0);
 
-            this.bullets.add(bullet);
+            bullets.add(bullet);
 
             // this.scene.sound.play("shot");
         }
