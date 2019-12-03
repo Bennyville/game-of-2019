@@ -171,7 +171,7 @@ export class GameScene extends Phaser.Scene {
         let headline = this.add.text(
             0,
             0,
-            "Choose Upgrade"
+            "Choose an upgrade"
         )
             .setFontSize(24);
 
@@ -298,9 +298,9 @@ export class GameScene extends Phaser.Scene {
             case 'firerate':
                 return 'Firerate +1';
             case 'healing':
-                return 'Health +50';
+                return 'Heal +50';
             case 'moreHp':
-                return 'Max health +100';
+                return 'Healthpoints +100';
             case 'damage':
                 return 'Damage +5';
             default:
