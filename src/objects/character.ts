@@ -9,6 +9,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     private _hpBar: Phaser.GameObjects.Group;
     private _hpBarStroke: Phaser.GameObjects.Graphics;
     private _hpBarContent: Phaser.GameObjects.Graphics;
+    private _hpBarText: Phaser.GameObjects.Text;
     private _dead: boolean;
     private _touchDamage: number;
     private _bulletDamage: number;
@@ -28,6 +29,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this._hpBar = this.scene.add.group();
         this._hpBarStroke = this.scene.add.graphics();
         this._hpBarContent = this.scene.add.graphics();
+        this._hpBarText = this.scene.add.text(0, 0, this.hp + '/' + this.maxHp);
         this.initHpBar();
 
         // states
@@ -58,12 +60,16 @@ export class Character extends Phaser.GameObjects.Sprite {
     private initHpBar(): void {
         this.hpBar.add(this._hpBarStroke);
         this.hpBar.add(this._hpBarContent);
+        this.hpBar.add(this._hpBarText);
 
         this.hpBarContent.setDepth(1);
         this.hpBarStroke.setDepth(1);
+        this.hpBarText.setDepth(1);
 
         this.hpBarStroke.lineStyle(1, 0x000000);
         this.hpBarStroke.strokeRect(0, 0, 32, 5);
+
+        this.hpBarText.setFontSize(8);
     }
 
     public damage(amount: number): void {
@@ -100,11 +106,15 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.hpBarContent.fillStyle(0x00ff00, 1);
         this.hpBarContent.fillRect(1, 1, 31 / (this.maxHp / this._hp), 3);
 
+        this.hpBarText.setText(this.hp + '/' + this.maxHp);
+
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {
             hpBarComponent.setX(this.x - (this.width / 2));
             hpBarComponent.setY(this.y-24);
         }, null);
+
+        this.hpBarText.setY(this.hpBarText.y - 10);
     }
 
     protected jump() {
@@ -172,6 +182,14 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     set hpBarContent(value: Phaser.GameObjects.Graphics) {
         this._hpBarContent = value;
+    }
+
+    get hpBarText(): Phaser.GameObjects.Text {
+        return this._hpBarText;
+    }
+
+    set hpBarText(value: Phaser.GameObjects.Text) {
+        this._hpBarText = value;
     }
 
     get bulletDamage(): number {
