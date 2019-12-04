@@ -8,6 +8,7 @@ export class GameScene extends Phaser.Scene {
     private player!: Player;
     private platforms!: Phaser.GameObjects.Group;
     private enemies!: Phaser.GameObjects.Group;
+    private bullets!: Phaser.GameObjects.Group;
     private currentLevel: number;
     private texts: Phaser.GameObjects.Text[] = [];
     private showUpgradeMenu!: boolean;
@@ -102,9 +103,12 @@ export class GameScene extends Phaser.Scene {
             this.enemies.add(new Enemy(this, 0, 0, 'enemy'));
         }
 
+        this.bullets = this.add.group();
+
         this.physics.add.collider(this.player, this.platforms);
         this.physics.add.collider(this.enemies, this.platforms);
         this.physics.add.overlap(this.player, this.enemies);
+        this.physics.add.overlap(this.bullets, this.enemies);
 
         this.upgradeMenuBg = this.add.graphics();
         this.upgradeMenuBg.fillStyle(0x000000, .8);
@@ -171,7 +175,7 @@ export class GameScene extends Phaser.Scene {
         let headline = this.add.text(
             0,
             0,
-            "Choose Upgrade"
+            "Choose an upgrade"
         )
             .setFontSize(24);
 
@@ -229,18 +233,24 @@ export class GameScene extends Phaser.Scene {
             }, null);
 
             // @ts-ignore
+            Phaser.Actions.Call(this.bullets.getChildren(), (bullet: Bullet) => {
+                bullet.move();
+            }, null);
+
+            this.physics.add.overlap(this.bullets, this.player);
+
+            // @ts-ignore
+            this.physics.overlap(this.bullets, this.player, (bullet: Bullet, player: Player) => {
+                bullet.destroy();
+                player.damage(5);
+            });
+
+            // @ts-ignore
             Phaser.Actions.Call(this.enemies.getChildren(), (enemy: Enemy) => {
                 enemy.update();
                 enemy.move(this.player.x, this.player.y);
 
-                enemy.shoot();
-                this.physics.add.overlap(enemy.bullets, this.player);
-
-                // @ts-ignore
-                this.physics.overlap(enemy.bullets, this.player, (bullet: Bullet, player: Player) => {
-                    bullet.destroy();
-                    player.damage(enemy.bulletDamage);
-                });
+                enemy.shoot(this.bullets);
 
                 enemy.updateHpBar();
 
@@ -298,11 +308,11 @@ export class GameScene extends Phaser.Scene {
             case 'firerate':
                 return 'Firerate +1';
             case 'healing':
-                return 'Health +50';
+                return 'Heal +50';
             case 'moreHp':
-                return 'Max health +100';
+                return 'Healthpoints +25';
             case 'damage':
-                return 'Damage +5';
+                return 'Damage +2';
             default:
                 return 'Unknown upgrade';
         }
