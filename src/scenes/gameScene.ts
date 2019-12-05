@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene {
             key: "GameScene"
         });
 
-        this.currentLevel = 15;
+        this.currentLevel = 1;
     }
 
     init(data): void {
