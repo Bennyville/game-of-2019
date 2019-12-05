@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene {
             key: "GameScene"
         });
 
-        this.currentLevel = 1;
+        this.currentLevel = 15;
     }
 
     init(data): void {
@@ -218,7 +218,7 @@ export class GameScene extends Phaser.Scene {
 
                 if (object.gameObject instanceof Enemy) {
                     let enemy: Enemy = object.gameObject;
-
+                    
                     if (object.blocked.right) {
                         enemy.xDirection = 1;
                     } else if (object.blocked.left) {
