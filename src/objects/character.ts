@@ -106,7 +106,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.hpBarContent.fillStyle(0x00ff00, 1);
         this.hpBarContent.fillRect(1, 1, 31 / (this.maxHp / this._hp), 3);
 
-        this.hpBarText.setText(this.hp + '/' + this.maxHp);
+        this.hpBarText.setText(this.hp + '');
 
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {
@@ -114,7 +114,8 @@ export class Character extends Phaser.GameObjects.Sprite {
             hpBarComponent.setY(this.y-24);
         }, null);
 
-        this.hpBarText.setY(this.hpBarText.y - 10);
+        this.hpBarText.setX(this.x - (this.hpBarText.width / 2));
+        this.hpBarText.setY(this.hpBarText.y - 7);
     }
 
     protected jump() {
