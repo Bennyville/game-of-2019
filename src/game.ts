@@ -6,7 +6,7 @@ import {BootScene} from "./scenes/bootScene";
 const config: Phaser.Types.Core.GameConfig = {
     backgroundColor: 0xCCCCCC,
     width: 800,
-    height: 600,
+    height: 608,
     parent: "game-wrapper",
     scene: [BootScene, MainMenuScene, GameScene],
     physics: {

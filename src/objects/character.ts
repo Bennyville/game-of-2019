@@ -120,7 +120,7 @@ export class Character extends Phaser.GameObjects.Sprite {
 
     protected jump() {
         if(!this.jumping) {
-            this.body.setVelocityY(-500);
+            this.body.setVelocityY(-600);
             this.jumping = true;
         }
     }
