@@ -15,6 +15,7 @@ export class BootScene extends Phaser.Scene {
         this.load.image("tiles", "src/assets/environment.png");
         this.load.audio("step", "src/assets/110099__ronaldvanwonderen__heavy-footstep.wav");
         this.load.audio("shot", "src/assets/77340__tcpp__machinegun-ish.wav");
+        this.load.tilemapTiledJSON('map', 'src/assets/map.json');
     }
 
     update(): void {
