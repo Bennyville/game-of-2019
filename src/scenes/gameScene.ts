@@ -273,6 +273,10 @@ export class GameScene extends Phaser.Scene {
             // });
 
             if (this.player.dead) {
+                let bestLevel: string | null = localStorage.getItem('bestLevel');
+                if(bestLevel == null || +bestLevel < this.currentLevel) {
+                   localStorage.setItem('bestLevel', this.currentLevel.toString());
+                }
                 this.currentLevel = 1;
                 this.playerState = undefined;
                 this.scene.stop("GameScene");
