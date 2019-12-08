@@ -6,11 +6,9 @@ import {Bullet} from "../objects/bullet";
 
 export class GameScene extends Phaser.Scene {
     private player!: Player;
-    private platforms!: Phaser.GameObjects.Group;
     private enemies!: Phaser.GameObjects.Group;
     private bullets!: Phaser.GameObjects.Group;
     private currentLevel: number;
-    private texts: Phaser.GameObjects.Text[] = [];
     private showUpgradeMenu!: boolean;
     private upgradeMenu!: Phaser.GameObjects.Group;
     private playerState?: object;
