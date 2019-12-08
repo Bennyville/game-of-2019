@@ -91,6 +91,8 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.enemies, this.platformLayer);
         this.physics.add.overlap(this.player, this.enemies);
         this.physics.add.overlap(this.bullets, this.enemies);
+        this.physics.add.overlap(this.enemies, this.player.bullets);
+        this.physics.add.overlap(this.bullets, this.player);
 
         this.upgradeMenuBg = this.add.graphics();
         this.upgradeMenuBg.fillStyle(0x000000, .8);
@@ -191,7 +193,6 @@ export class GameScene extends Phaser.Scene {
 
             this.player.shoot();
 
-            this.physics.add.overlap(this.enemies, this.player.bullets);
 
             this.physics.world.on('worldbounds', (object) => {
                 if (object.gameObject instanceof Bullet) {
@@ -219,7 +220,6 @@ export class GameScene extends Phaser.Scene {
                 bullet.move();
             }, null);
 
-            this.physics.add.overlap(this.bullets, this.player);
 
             // @ts-ignore
             this.physics.overlap(this.bullets, this.player, (bullet: Bullet, player: Player) => {
