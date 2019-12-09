@@ -126,7 +126,8 @@ export class Player extends Character {
 
     public shoot(): void {
         if (this.target && this.weaponCount > 0) {
-            let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, this.target.y + 2);
+            let shootY = Phaser.Math.Between((this.target.y -  this.target.height / 2), (this.target.y + this.target.height / 2));
+            let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, shootY);
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
             if (this.nextShot < this.scene.time.now || !this.nextShot) {
@@ -136,6 +137,14 @@ export class Player extends Character {
                 this.bullets.add(bullet);
 
                 this.scene.sound.play("shot");
+                
+                let recoilX = 5;
+
+                if(this.direction == 'left') {
+                    recoilX = -5;
+                }
+
+                this.setX(this.x - recoilX);
 
                 this.nextShot = this.scene.time.now + (1000 / this.fireRate);
             }

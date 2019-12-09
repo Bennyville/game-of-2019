@@ -38,11 +38,11 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // damage
         this._touchDamage = 0;
-        this._bulletDamage = 10;
+        this._bulletDamage = 2;
 
         // equipment
         this._weaponCount = 0;
-        this._fireRate = 3;
+        this._fireRate = 10;
         this._bullets = this.scene.add.group();
 
         this.initPhysics(20, 32);
