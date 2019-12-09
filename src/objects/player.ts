@@ -136,6 +136,14 @@ export class Player extends Character {
                 this.bullets.add(bullet);
 
                 this.scene.sound.play("shot");
+                
+                let recoilX = 5;
+
+                if(this.direction == 'left') {
+                    recoilX = -5;
+                }
+
+                this.setX(this.x - recoilX);
 
                 this.nextShot = this.scene.time.now + (1000 / this.fireRate);
             }
