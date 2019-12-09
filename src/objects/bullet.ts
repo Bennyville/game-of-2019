@@ -20,7 +20,7 @@ export class Bullet extends Phaser.GameObjects.Graphics {
         this._vy = vy;
 
         // visuals
-        this._radius = 2;
+        this._radius = 3;
         this._color = 0xffffff;
 
         this.initBullet();
