@@ -44,6 +44,17 @@ export class Enemy extends Character {
             bullet.setDepth(0);
 
             bullets.add(bullet);
+            
+            let recoilX = 0;
+
+            if(this.xDirection == 1) {
+                recoilX = -5;
+            } else if(this.xDirection == 0) {
+                recoilX = 5;
+            }
+
+            this.setX(this.x - recoilX);
+
 
             // this.scene.sound.play("shot");
         }
