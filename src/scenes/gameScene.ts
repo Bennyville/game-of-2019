@@ -6,15 +6,16 @@ import {Bullet} from "../objects/bullet";
 
 export class GameScene extends Phaser.Scene {
     private player!: Player;
-    private platforms!: Phaser.GameObjects.Group;
     private enemies!: Phaser.GameObjects.Group;
     private bullets!: Phaser.GameObjects.Group;
     private currentLevel: number;
-    private texts: Phaser.GameObjects.Text[] = [];
     private showUpgradeMenu!: boolean;
     private upgradeMenu!: Phaser.GameObjects.Group;
     private playerState?: object;
     private upgradeMenuBg!: Phaser.GameObjects.Graphics;
+    private map!: Phaser.Tilemaps.Tilemap;
+    private environmentLayer!: Phaser.Tilemaps.StaticTilemapLayer; 
+    private platformLayer!: Phaser.Tilemaps.StaticTilemapLayer; 
 
     constructor() {
         super({
@@ -47,8 +48,23 @@ export class GameScene extends Phaser.Scene {
     create(): void {
         this.showUpgradeMenu = true;
 
-        this.add.tileSprite(400, 300, 800, 600, "background");
+        this.add.tileSprite(400, 300, 800, 608, "background");
 
+        this.map = this.add.tilemap('map');
+
+        let tileset = this.map.addTilesetImage('environment', 'tiles');
+        this.environmentLayer = this.map.createStaticLayer('Environment', tileset, 0, 0); 
+        this.platformLayer = this.map.createStaticLayer('Platforms', tileset, 0, 0); 
+        this.platformLayer.setCollisionByExclusion([-1], true);
+
+        // @ts-ignore
+        this.platformLayer.layer.data.forEach((row) => { // here we are iterating through each tile.
+            // @ts-ignore
+            row.forEach((Tile) => {
+                Tile.collideDown = false;
+            })
+        });
+        
         this.add.text(
             30,
             30,
@@ -61,42 +77,6 @@ export class GameScene extends Phaser.Scene {
             this.player.applyState(this.playerState);
         }
 
-        this.platforms = this.add.group();
-
-        // First stage
-        this.platforms.add(new Platform(this, 0, 525, 50, 20));
-        this.platforms.add(new Platform(this, 100, 525, 275, 20));
-        this.platforms.add(new Platform(this, 425, 525, 275, 20));
-        this.platforms.add(new Platform(this, 750, 525, 50, 20));
-
-        // Second stage
-        this.platforms.add(new Platform(this, 0, 450, 50, 20));
-        this.platforms.add(new Platform(this, 100, 450, 167, 20));
-        this.platforms.add(new Platform(this, 317, 450, 167, 20));
-        this.platforms.add(new Platform(this, 534, 450, 167, 20));
-        this.platforms.add(new Platform(this, 750, 450, 50, 20));
-
-        // Third stage
-        this.platforms.add(new Platform(this, 0, 375, 50, 20));
-        this.platforms.add(new Platform(this, 100, 375, 112.5, 20));
-        this.platforms.add(new Platform(this, 262.5, 375, 112.5, 20));
-        this.platforms.add(new Platform(this, 425, 375, 112.5, 20));
-        this.platforms.add(new Platform(this, 587.5, 375, 112.5, 20));
-        this.platforms.add(new Platform(this, 750, 375, 50, 20));
-
-        // Fourth stage
-        this.platforms.add(new Platform(this, 0, 300, 50, 20));
-        this.platforms.add(new Platform(this, 100, 300, 167, 20));
-        this.platforms.add(new Platform(this, 317, 300, 167, 20));
-        this.platforms.add(new Platform(this, 534, 300, 167, 20));
-        this.platforms.add(new Platform(this, 750, 300, 50, 20));
-
-        // Fifth stage
-        this.platforms.add(new Platform(this, 0, 225, 50, 20));
-        this.platforms.add(new Platform(this, 100, 225, 275, 20));
-        this.platforms.add(new Platform(this, 425, 225, 275, 20));
-        this.platforms.add(new Platform(this, 750, 225, 50, 20));
-
         this.enemies = this.add.group();
 
         for(let i = 0; i < this.currentLevel*2; i++) {
@@ -105,10 +85,12 @@ export class GameScene extends Phaser.Scene {
 
         this.bullets = this.add.group();
 
-        this.physics.add.collider(this.player, this.platforms);
-        this.physics.add.collider(this.enemies, this.platforms);
+        this.physics.add.collider(this.player, this.platformLayer);
+        this.physics.add.collider(this.enemies, this.platformLayer);
         this.physics.add.overlap(this.player, this.enemies);
         this.physics.add.overlap(this.bullets, this.enemies);
+        this.physics.add.overlap(this.enemies, this.player.bullets);
+        this.physics.add.overlap(this.bullets, this.player);
 
         this.upgradeMenuBg = this.add.graphics();
         this.upgradeMenuBg.fillStyle(0x000000, .8);
@@ -209,7 +191,6 @@ export class GameScene extends Phaser.Scene {
 
             this.player.shoot();
 
-            this.physics.add.overlap(this.enemies, this.player.bullets);
 
             this.physics.world.on('worldbounds', (object) => {
                 if (object.gameObject instanceof Bullet) {
@@ -218,7 +199,7 @@ export class GameScene extends Phaser.Scene {
 
                 if (object.gameObject instanceof Enemy) {
                     let enemy: Enemy = object.gameObject;
-
+                    
                     if (object.blocked.right) {
                         enemy.xDirection = 1;
                     } else if (object.blocked.left) {
@@ -237,7 +218,6 @@ export class GameScene extends Phaser.Scene {
                 bullet.move();
             }, null);
 
-            this.physics.add.overlap(this.bullets, this.player);
 
             // @ts-ignore
             this.physics.overlap(this.bullets, this.player, (bullet: Bullet, player: Player) => {
@@ -283,6 +263,11 @@ export class GameScene extends Phaser.Scene {
             this.physics.overlap(this.enemies, this.player.bullets, (enemy: Enemy, bullet: Bullet) => {
                 bullet.destroy();
                 enemy.damage(this.player.bulletDamage);
+                if(bullet.vx < 0) {
+                    enemy.setX(enemy.x - 5);
+                } else {
+                    enemy.setX(enemy.x + 5);
+                } 
             });
 
             // @ts-ignore
@@ -293,6 +278,10 @@ export class GameScene extends Phaser.Scene {
             // });
 
             if (this.player.dead) {
+                let bestLevel: string | null = localStorage.getItem('bestLevel');
+                if(bestLevel == null || +bestLevel < this.currentLevel) {
+                   localStorage.setItem('bestLevel', this.currentLevel.toString());
+                }
                 this.currentLevel = 1;
                 this.playerState = undefined;
                 this.scene.stop("GameScene");

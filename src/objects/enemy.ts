@@ -44,6 +44,17 @@ export class Enemy extends Character {
             bullet.setDepth(0);
 
             bullets.add(bullet);
+            
+            let recoilX = 0;
+
+            if(this.xDirection == 1) {
+                recoilX = -5;
+            } else if(this.xDirection == 0) {
+                recoilX = 5;
+            }
+
+            this.setX(this.x - recoilX);
+
 
             // this.scene.sound.play("shot");
         }
@@ -56,7 +67,7 @@ export class Enemy extends Character {
 
             if(this.chase) {
                 if(playerY > this.y) {
-                    this.xDirection = 0;
+                    this.xDirection = Phaser.Math.Between(0, 1);
                 } else {
                     if(playerX > this.x) {
                         this.xDirection = 0;
@@ -74,24 +85,25 @@ export class Enemy extends Character {
                 this.xDirection = Phaser.Math.Between(0, 2);
             }
 
-            switch (this.xDirection) {
-                case 0:
-                    this.body.setVelocityX(1.5);
-                    this.anims.play('enemyWalking');
-                    this.setFlipX(false);
-                    break;
-                case 1:
-                    this.body.setVelocityX(-1.5);
-                    this.anims.play('enemyWalking');
-                    this.setFlipX(true);
-                    break;
-                case 2:
-                    this.body.setVelocityX(0);
-                    this.anims.stop();
-                    break;
-            }
 
-            this.xSteps = Phaser.Math.Between(0, 100);
+            this.xSteps = Phaser.Math.Between(50, 150);
+        }
+
+        switch (this.xDirection) {
+            case 0:
+                this.body.setVelocityX(1.5);
+                this.anims.play('enemyWalking');
+                this.setFlipX(false);
+                break;
+            case 1:
+                this.body.setVelocityX(-1.5);
+                this.anims.play('enemyWalking');
+                this.setFlipX(true);
+                break;
+            case 2:
+                this.body.setVelocityX(0);
+                this.anims.stop();
+                break;
         }
 
         if (this.xStep < this.xSteps) {

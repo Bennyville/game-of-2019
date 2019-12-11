@@ -2,6 +2,10 @@
 
 My project for the [Game Off 2019](https://itch.io/jam/game-off-2019)
 
+Heres my submission for the Game Off 2019: https://itch.io/jam/game-off-2019/rate/527068
+
+Here you can find the latest and further developed build: https://bennyville.github.io/game-off-2019/
+
 ## Requirements
 
 - yarn

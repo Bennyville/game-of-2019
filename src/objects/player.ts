@@ -7,6 +7,7 @@ export class Player extends Character {
     body!: Phaser.Physics.Arcade.Body; // https://github.com/photonstorm/phaser3-docs/issues/24
 
     private _cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    private _wasd: object;
     private _pushing: boolean;
     private _nextShot: number;
     //@ts-ignore
@@ -32,6 +33,12 @@ export class Player extends Character {
 
         // input
         this._cursors = scene.input.keyboard.createCursorKeys();
+        this._wasd = {
+            w: scene.input.keyboard.addKey('W'),
+            a: scene.input.keyboard.addKey('A'),
+            s: scene.input.keyboard.addKey('S'),
+            d: scene.input.keyboard.addKey('D'),
+        };
 
         this.initEvents();
     }
@@ -57,16 +64,19 @@ export class Player extends Character {
             // this.dodge();
         }
 
-        if(this.cursors.up!.isDown) {
+        // @ts-ignore
+        if(this.cursors.up!.isDown || this.wasd.w!.isDown) {
             this.jump();
         }
 
-        if(this.cursors.left!.isDown) {
+        // @ts-ignore
+        if(this.cursors.left!.isDown || this.wasd.a!.isDown) {
             this.body.setVelocityX(-200);
             this.anims.play('playerWalking', true);
             this.setFlipX(true);
             this.direction = 'left';
-        } else if(this.cursors.right!.isDown) {
+        // @ts-ignore
+        } else if(this.cursors.right!.isDown || this.wasd.d!.isDown) {
             this.body.setVelocityX(200);
             this.anims.play('playerWalking', true);
             this.setFlipX(false);
@@ -126,7 +136,8 @@ export class Player extends Character {
 
     public shoot(): void {
         if (this.target && this.weaponCount > 0) {
-            let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, this.target.y + 2);
+            let shootY = Phaser.Math.Between((this.target.y -  this.target.height / 2), (this.target.y + this.target.height / 2));
+            let angle = Phaser.Math.Angle.Between(this.x, this.y + 2, this.target.x, shootY);
             let velocity = this.scene.physics.velocityFromRotation(angle, 10);
 
             if (this.nextShot < this.scene.time.now || !this.nextShot) {
@@ -136,6 +147,14 @@ export class Player extends Character {
                 this.bullets.add(bullet);
 
                 this.scene.sound.play("shot");
+                
+                let recoilX = 5;
+
+                if(this.direction == 'left') {
+                    recoilX = -5;
+                }
+
+                this.setX(this.x - recoilX);
 
                 this.nextShot = this.scene.time.now + (1000 / this.fireRate);
             }
@@ -201,6 +220,14 @@ export class Player extends Character {
 
     set pushing(value: boolean) {
         this._pushing = value;
+    }
+
+    get wasd(): object {
+        return this._wasd;
+    }
+
+    set wasd(value: object) {
+        this._wasd = value;
     }
 
     get direction(): string {

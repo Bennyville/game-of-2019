@@ -38,11 +38,11 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         // damage
         this._touchDamage = 0;
-        this._bulletDamage = 10;
+        this._bulletDamage = 2;
 
         // equipment
         this._weaponCount = 0;
-        this._fireRate = 3;
+        this._fireRate = 10;
         this._bullets = this.scene.add.group();
 
         this.initPhysics(20, 32);
@@ -106,7 +106,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.hpBarContent.fillStyle(0x00ff00, 1);
         this.hpBarContent.fillRect(1, 1, 31 / (this.maxHp / this._hp), 3);
 
-        this.hpBarText.setText(this.hp + '/' + this.maxHp);
+        this.hpBarText.setText(this.hp + '');
 
         // @ts-ignore
         Phaser.Actions.Call(this.hpBar.getChildren(), (hpBarComponent: Phaser.GameObjects.Graphics) => {
@@ -114,12 +114,13 @@ export class Character extends Phaser.GameObjects.Sprite {
             hpBarComponent.setY(this.y-24);
         }, null);
 
-        this.hpBarText.setY(this.hpBarText.y - 10);
+        this.hpBarText.setX(this.x - (this.hpBarText.width / 2));
+        this.hpBarText.setY(this.hpBarText.y - 7);
     }
 
     protected jump() {
         if(!this.jumping) {
-            this.body.setVelocityY(-500);
+            this.body.setVelocityY(-600);
             this.jumping = true;
         }
     }
